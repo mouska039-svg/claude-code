@@ -24,7 +24,7 @@ function ExerciseRow({ exercise, index }) {
   );
 }
 
-function SessionCard({ session, index }) {
+function SessionCard({ session }) {
   return (
     <div className="session-card">
       <div className="session-header">
