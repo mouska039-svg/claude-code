@@ -1,0 +1,193 @@
+{
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "signIn": "Sign In",
+    "signUp": "Start for free",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "badge": "New — Real-time AI generation",
+    "title": "Create coaching programs in seconds with AI",
+    "subtitle": "FitCoach AI generates personalized workout programs, nutrition plans, and social media content for your clients — in seconds.",
+    "cta": "Start for free",
+    "ctaSecondary": "See demo",
+    "noCard": "No credit card required"
+  },
+  "features": {
+    "title": "Everything you need to coach",
+    "subtitle": "Powerful AI tools built for professional fitness coaches.",
+    "items": {
+      "programs": {
+        "title": "Workout Programs",
+        "description": "Generate complete, personalized training plans in seconds with AI."
+      },
+      "nutrition": {
+        "title": "Nutrition Plans",
+        "description": "Create tailored meal plans with macros, shopping lists and detailed meals."
+      },
+      "content": {
+        "title": "Social Media Content",
+        "description": "Generate captions, hooks and Reel ideas to boost your engagement."
+      },
+      "pdf": {
+        "title": "Branded PDF Export",
+        "description": "Export your programs with your logo and colors for a professional presentation."
+      },
+      "crm": {
+        "title": "Client Management",
+        "description": "Track progress, measurements and notes for each client in one place."
+      },
+      "sharing": {
+        "title": "Secure Sharing",
+        "description": "Share programs with your clients via secure links, no account required."
+      }
+    }
+  },
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "Start for free, scale when you need it.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save": "Save 20%",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "0",
+        "description": "To start exploring FitCoach AI.",
+        "cta": "Get started",
+        "features": [
+          "3 generations / month",
+          "AI generators access",
+          "Basic PDF export",
+          "1 client"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "29",
+        "description": "For active coaches who want to save time.",
+        "cta": "Try Pro",
+        "badge": "Popular",
+        "features": [
+          "50 generations / month",
+          "All AI generators",
+          "Branded PDF export",
+          "Unlimited clients",
+          "Client link sharing",
+          "Priority support"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "79",
+        "description": "For coaches running a real business.",
+        "cta": "Try Premium",
+        "features": [
+          "Unlimited generations",
+          "All Pro tools",
+          "Full branding",
+          "Advanced analytics",
+          "API access",
+          "Dedicated onboarding"
+        ]
+      }
+    },
+    "perMonth": "/ month"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Everything you need to know about FitCoach AI.",
+    "items": [
+      {
+        "question": "How does AI generation work?",
+        "answer": "FitCoach AI uses GPT-4 to generate workout programs, nutrition plans and content based on the information you provide. Each generation is unique and personalized."
+      },
+      {
+        "question": "Can I edit generated programs?",
+        "answer": "Yes, you can edit all generated programs directly in the app. AI provides a working base that you can refine to your needs."
+      },
+      {
+        "question": "How does client sharing work?",
+        "answer": "You generate a secure link from your dashboard. Your client can access their program without creating an account, with your branding displayed."
+      },
+      {
+        "question": "Can I cancel at any time?",
+        "answer": "Yes, you can cancel your subscription at any time. You keep access until the end of your billing period."
+      },
+      {
+        "question": "Is my client data secure?",
+        "answer": "Yes. All data is encrypted and stored securely. We never share your client data with third parties."
+      },
+      {
+        "question": "Is there a free trial?",
+        "answer": "The free plan gives you access to 3 generations per month with no time limit. You can upgrade whenever you want."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to transform your coaching?",
+    "subtitle": "Join coaches who save hours every week with FitCoach AI.",
+    "button": "Start for free"
+  },
+  "footer": {
+    "tagline": "AI for fitness coaches.",
+    "product": "Product",
+    "legal": "Legal",
+    "features": "Features",
+    "pricing": "Pricing",
+    "changelog": "Changelog",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookies",
+    "rights": "All rights reserved."
+  },
+  "auth": {
+    "signIn": {
+      "title": "Welcome back!",
+      "subtitle": "Sign in to your FitCoach AI account",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "button": "Sign in",
+      "loading": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "error": "Invalid email or password"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "subtitle": "Start coaching with AI today",
+      "name": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "button": "Create account",
+      "loading": "Creating...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "terms": "By creating an account, you agree to our",
+      "termsLink": "terms of service",
+      "success": "Check your email to confirm your account"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to receive a reset link",
+      "email": "Email",
+      "button": "Send link",
+      "loading": "Sending...",
+      "backToSignIn": "Back to sign in",
+      "success": "Check your email for the reset link"
+    },
+    "resetPassword": {
+      "title": "New password",
+      "subtitle": "Choose a new secure password",
+      "password": "New password",
+      "confirmPassword": "Confirm password",
+      "button": "Reset password",
+      "loading": "Resetting...",
+      "success": "Password changed successfully"
+    }
+  }
+}

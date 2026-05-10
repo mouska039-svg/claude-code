@@ -1,0 +1,193 @@
+{
+  "nav": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "signIn": "Se connecter",
+    "signUp": "Commencer gratuitement",
+    "dashboard": "Tableau de bord"
+  },
+  "hero": {
+    "badge": "Nouveau — Génération IA en temps réel",
+    "title": "Crée des programmes coaching en quelques secondes avec l'IA",
+    "subtitle": "FitCoach AI génère des programmes d'entraînement personnalisés, des plans nutrition et des contenus social media pour tes clients — en quelques secondes.",
+    "cta": "Commencer gratuitement",
+    "ctaSecondary": "Voir la démo",
+    "noCard": "Aucune carte bancaire requise"
+  },
+  "features": {
+    "title": "Tout ce dont tu as besoin pour coacher",
+    "subtitle": "Des outils IA puissants pensés pour les coachs fitness professionnels.",
+    "items": {
+      "programs": {
+        "title": "Programmes d'entraînement",
+        "description": "Génère des plans d'entraînement complets et personnalisés en quelques secondes avec l'IA."
+      },
+      "nutrition": {
+        "title": "Plans nutrition",
+        "description": "Crée des plans alimentaires sur mesure avec macros, listes de courses et repas détaillés."
+      },
+      "content": {
+        "title": "Contenus social media",
+        "description": "Génère des captions, hooks et idées de Reels pour booster ton engagement."
+      },
+      "pdf": {
+        "title": "Export PDF brandé",
+        "description": "Exporte tes programmes avec ton logo et tes couleurs pour une présentation pro."
+      },
+      "crm": {
+        "title": "Gestion des clients",
+        "description": "Suis les progrès, mensurations et notes de chaque client dans un seul endroit."
+      },
+      "sharing": {
+        "title": "Partage sécurisé",
+        "description": "Partage les programmes avec tes clients via des liens sécurisés, sans compte requis."
+      }
+    }
+  },
+  "pricing": {
+    "title": "Tarifs simples et transparents",
+    "subtitle": "Commence gratuitement, évolue quand tu en as besoin.",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "save": "Économise 20%",
+    "plans": {
+      "free": {
+        "name": "Gratuit",
+        "price": "0",
+        "description": "Pour commencer à explorer FitCoach AI.",
+        "cta": "Commencer",
+        "features": [
+          "3 générations / mois",
+          "Accès aux générateurs IA",
+          "Export PDF basique",
+          "1 client"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "29",
+        "description": "Pour les coachs actifs qui veulent gagner du temps.",
+        "cta": "Essayer Pro",
+        "badge": "Populaire",
+        "features": [
+          "50 générations / mois",
+          "Tous les générateurs IA",
+          "Export PDF brandé",
+          "Clients illimités",
+          "Partage de liens clients",
+          "Support prioritaire"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "79",
+        "description": "Pour les coachs qui gèrent une vraie activité.",
+        "cta": "Essayer Premium",
+        "features": [
+          "Générations illimitées",
+          "Tous les outils Pro",
+          "Branding complet",
+          "Analytics avancés",
+          "API access",
+          "Onboarding dédié"
+        ]
+      }
+    },
+    "perMonth": "/ mois"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Tout ce que tu dois savoir sur FitCoach AI.",
+    "items": [
+      {
+        "question": "Comment fonctionne la génération IA ?",
+        "answer": "FitCoach AI utilise GPT-4 pour générer des programmes d'entraînement, plans nutrition et contenus basés sur les informations que tu fournis. Chaque génération est unique et personnalisée."
+      },
+      {
+        "question": "Puis-je modifier les programmes générés ?",
+        "answer": "Oui, tu peux modifier tous les programmes générés directement dans l'application. L'IA fournit une base de travail que tu peux affiner selon tes besoins."
+      },
+      {
+        "question": "Comment fonctionne le partage avec les clients ?",
+        "answer": "Tu génères un lien sécurisé depuis ton dashboard. Ton client peut accéder à son programme sans créer de compte, avec ton branding affiché."
+      },
+      {
+        "question": "Puis-je annuler à tout moment ?",
+        "answer": "Oui, tu peux annuler ton abonnement à tout moment. Tu conserves l'accès jusqu'à la fin de ta période de facturation."
+      },
+      {
+        "question": "Les données de mes clients sont-elles sécurisées ?",
+        "answer": "Oui. Toutes les données sont chiffrées et stockées de manière sécurisée. Nous ne partageons jamais les données de tes clients avec des tiers."
+      },
+      {
+        "question": "Y a-t-il une période d'essai gratuite ?",
+        "answer": "Le plan gratuit te donne accès à 3 générations par mois sans limite de durée. Tu peux upgrader quand tu le souhaites."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Prêt à transformer ton coaching ?",
+    "subtitle": "Rejoins les coachs qui gagnent des heures chaque semaine grâce à FitCoach AI.",
+    "button": "Commencer gratuitement"
+  },
+  "footer": {
+    "tagline": "L'IA au service des coachs fitness.",
+    "product": "Produit",
+    "legal": "Légal",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "changelog": "Changelog",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "cookies": "Cookies",
+    "rights": "Tous droits réservés."
+  },
+  "auth": {
+    "signIn": {
+      "title": "Bon retour !",
+      "subtitle": "Connecte-toi à ton compte FitCoach AI",
+      "email": "Email",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "button": "Se connecter",
+      "loading": "Connexion...",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "S'inscrire",
+      "error": "Email ou mot de passe incorrect"
+    },
+    "signUp": {
+      "title": "Crée ton compte",
+      "subtitle": "Commence à coacher avec l'IA dès aujourd'hui",
+      "name": "Nom complet",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "button": "Créer mon compte",
+      "loading": "Création...",
+      "hasAccount": "Déjà un compte ?",
+      "signIn": "Se connecter",
+      "terms": "En créant un compte, tu acceptes nos",
+      "termsLink": "conditions d'utilisation",
+      "success": "Vérifie ton email pour confirmer ton compte"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entre ton email pour recevoir un lien de réinitialisation",
+      "email": "Email",
+      "button": "Envoyer le lien",
+      "loading": "Envoi...",
+      "backToSignIn": "Retour à la connexion",
+      "success": "Vérifie ton email pour le lien de réinitialisation"
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisis un nouveau mot de passe sécurisé",
+      "password": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "button": "Réinitialiser",
+      "loading": "Réinitialisation...",
+      "success": "Mot de passe modifié avec succès"
+    }
+  }
+}
