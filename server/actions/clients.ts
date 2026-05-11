@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { redirect } from "next/navigation"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 const clientSchema = z.object({
   full_name: z.string().min(1, "Nom requis"),
@@ -139,7 +140,7 @@ export async function addNote(clientId: string, _prev: Result | null, formData: 
 
   const { error } = await supabase.from("client_notes").insert({
     client_id: clientId,
-    content: parsed.data.content,
+    content: sanitizeHtml(parsed.data.content),
   })
 
   if (error) return { error: error.message }

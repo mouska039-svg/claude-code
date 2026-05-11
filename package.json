@@ -9,6 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:rls": "npx tsx scripts/test-rls.ts",
     "prepare": "husky"
   },
   "dependencies": {

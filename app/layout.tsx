@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { PostHogProvider } from "@/components/shared/posthog-provider"
+import { CookieBanner } from "@/components/shared/cookie-banner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
         <PostHogProvider>
           {children}
           <Toaster />
+          <CookieBanner />
         </PostHogProvider>
       </body>
     </html>
