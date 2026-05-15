@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const contentOutputSchema = z.object({
   variants: z.array(z.string()).min(5).max(5),
-  hashtags: z.array(z.string()).optional(),
+  hashtags: z.array(z.string()).nullable(),
 })
 
 export type ContentOutput = z.infer<typeof contentOutputSchema>

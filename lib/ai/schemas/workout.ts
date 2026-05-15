@@ -5,8 +5,8 @@ export const exerciseSchema = z.object({
   sets: z.number().int().min(1).max(10),
   reps: z.string(), // "8-12" or "AMRAP" etc.
   rest: z.string(), // "60s", "2min"
-  tempo: z.string().optional(),
-  notes: z.string().optional(),
+  tempo: z.string().nullable(),
+  notes: z.string().nullable(),
 })
 
 export const daySchema = z.object({
@@ -25,7 +25,7 @@ export const workoutProgramSchema = z.object({
   durationWeeks: z.number().int().min(1).max(52),
   overview: z.string(),
   weeks: z.array(weekSchema),
-  progressionNotes: z.string().optional(),
+  progressionNotes: z.string().nullable(),
 })
 
 export type WorkoutProgramOutput = z.infer<typeof workoutProgramSchema>
