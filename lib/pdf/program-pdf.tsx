@@ -37,12 +37,12 @@ export function ProgramPDF({ program, brandName, brandColor, generatedAt }: Prop
 
         {/* Weeks */}
         {program.weeks.map((week) => (
-          <View key={week.weekNumber} style={styles.section} wrap={false}>
+          <View key={week.weekNumber} style={styles.section}>
             <Text style={[styles.sectionTitle, { color: primary, borderBottomColor: primary }]}>
               Semaine {week.weekNumber}
             </Text>
             {week.days.map((day, di) => (
-              <View key={di} style={[styles.card, { marginBottom: 10 }]}>
+              <View key={di} style={[styles.card, { marginBottom: 10 }]} wrap={false}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                   <Text style={styles.cardTitle}>{day.name}</Text>
                   <Text style={[styles.muted, { fontFamily: "Helvetica-Oblique" }]}>{day.focus}</Text>
@@ -57,10 +57,10 @@ export function ProgramPDF({ program, brandName, brandColor, generatedAt }: Prop
                 </View>
 
                 {day.exercises.map((ex, ei) => (
-                  <View key={ei} style={styles.tableRow}>
+                  <View key={ei} style={[styles.tableRow, { alignItems: "flex-start" }]}>
                     <View style={{ flex: 3 }}>
                       <Text style={styles.body}>{ex.name}</Text>
-                      {ex.notes && <Text style={styles.muted}>{ex.notes}</Text>}
+                      {ex.notes ? <Text style={styles.muted}>{ex.notes}</Text> : null}
                     </View>
                     <Text style={[styles.body, { flex: 1, textAlign: "center" }]}>{ex.sets}</Text>
                     <Text style={[styles.body, { flex: 1, textAlign: "center" }]}>{ex.reps}</Text>

@@ -126,7 +126,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     paddingVertical: 5,
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   tableHeader: {
     backgroundColor: colors.background,
