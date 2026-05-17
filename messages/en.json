@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "title": "Naya — The digital guide for wellness practitioners",
+    "description": "Structure your treatment plans, extend the effect of your sessions, grow your practice."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "testimonials": "Testimonials",
+    "faq": "FAQ",
+    "signin": "Sign in",
+    "signup": "Start for free"
+  },
+  "hero": {
+    "eyebrow": "The digital guide for wellness practitioners",
+    "title": "Naya",
+    "subtitle": "Structure your treatment plans, extend the effect of your sessions, grow your practice.",
+    "cta_primary": "Start for free",
+    "cta_secondary": "View demo",
+    "badge": "Built for naturopaths, sophrology therapists, hypnotherapists"
+  },
+  "pillars": {
+    "title": "Everything you need",
+    "subtitle": "A platform built for wellness practitioners.",
+    "ai": {
+      "title": "AI-powered treatment plans",
+      "description": "Generate personalized protocols in seconds from your client's intake form. Naturopathy, sophrology, hypnotherapy — each specialty has its own model."
+    },
+    "portal": {
+      "title": "Engaged mobile client portal",
+      "description": "Your clients access their treatment plan from their phone, re-listen to sophrology/hypnosis audios, keep their mood journal. The effect of your sessions lasts longer."
+    },
+    "b2b": {
+      "title": "Corporate wellness market",
+      "description": "Offer corporate wellness programs. Generate compelling commercial proposals, track participants, invoice in multiple installments."
+    }
+  },
+  "pricing": {
+    "title": "Transparent pricing",
+    "subtitle": "Start free, scale when you're ready.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save": "Save 20%",
+    "per_month": "/ month",
+    "popular": "Popular",
+    "plans": {
+      "free": {
+        "name": "Discovery",
+        "price": "0",
+        "description": "To discover Naya and start structuring your practice.",
+        "features": [
+          "Up to 5 clients",
+          "3 AI protocols / month",
+          "2 generated audios / month",
+          "Basic client portal",
+          "Digital intake forms",
+          "Email support"
+        ],
+        "cta": "Start for free"
+      },
+      "cabinet": {
+        "name": "Practice",
+        "price": "39",
+        "description": "For practitioners who want to grow their solo practice.",
+        "features": [
+          "Unlimited clients",
+          "30 AI protocols / month",
+          "20 generated audios / month",
+          "Full client portal with PWA",
+          "Custom branding",
+          "Branded protocol PDFs",
+          "Product store",
+          "Priority support"
+        ],
+        "cta": "Choose Practice"
+      },
+      "cabinet_plus": {
+        "name": "Practice + Corporate",
+        "price": "79",
+        "description": "For practitioners who want to develop the B2B corporate wellness segment.",
+        "features": [
+          "Everything in Practice, plus...",
+          "Corporate wellness module",
+          "Unlimited protocols",
+          "Unlimited audios",
+          "ElevenLabs voice clone",
+          "AI commercial proposals",
+          "Multi-installment invoicing",
+          "Automated HR reports",
+          "Dedicated support"
+        ],
+        "cta": "Choose Practice + Corporate"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "What they say",
+    "items": [
+      {
+        "name": "Sophie M.",
+        "role": "Naturopath, Lyon",
+        "content": "Naya transformed the way I work. I generate protocols in 5 minutes instead of 2 hours. My clients love the mobile portal."
+      },
+      {
+        "name": "Marc T.",
+        "role": "Sophrology therapist, Paris",
+        "content": "The corporate module helped me land my first corporate wellness contract with a 200-person company. The AI-generated commercial proposal was impressive."
+      },
+      {
+        "name": "Isabelle R.",
+        "role": "Hypnotherapist, Bordeaux",
+        "content": "My clients re-listen to the audios between sessions. The results are much better and the mood journal lets me track their progress."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": [
+      {
+        "question": "Is Naya GDPR compliant?",
+        "answer": "Yes, fully. Data is hosted in Europe (Supabase EU). Intake forms and health data are encrypted at rest. A GDPR consent model with electronic signature is included. You maintain full control of your data."
+      },
+      {
+        "question": "Does the AI make medical diagnoses?",
+        "answer": "No, never. Naya is a tool for structuring treatment plans, not a medical tool. All generated protocols include a clear disclaimer: 'These recommendations are lifestyle advice and do not replace medical advice.'"
+      },
+      {
+        "question": "Can I use my own branding?",
+        "answer": "Yes, from the Practice plan. You can add your logo, accent color, and tagline. Protocol PDFs and the client portal will reflect your brand identity."
+      },
+      {
+        "question": "How does the ElevenLabs voice clone work?",
+        "answer": "On the Practice + Corporate plan, you can record your voice to create a voice clone and generate sophrology/hypnosis audios with your own voice. This feature requires identity verification and explicit consent."
+      },
+      {
+        "question": "Can I cancel at any time?",
+        "answer": "Yes, with no commitment or cancellation fees. Your data remains accessible for 30 days after cancellation, giving you time to export it."
+      },
+      {
+        "question": "Is the client portal a mobile app?",
+        "answer": "It's a PWA (Progressive Web App): your clients can add it to their home screen like a real app, without going through the App Store. It works on iOS and Android."
+      }
+    ]
+  },
+  "auth": {
+    "signin": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your Naya account",
+      "email": "Email",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Sign in",
+      "no_account": "Don't have an account?",
+      "signup_link": "Create an account"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start for free, no credit card required",
+      "full_name": "Full name",
+      "email": "Professional email",
+      "password": "Password",
+      "specialty": "Your specialty",
+      "specialty_options": {
+        "naturopathe": "Naturopath",
+        "sophrologue": "Sophrology therapist",
+        "hypnotherapeute": "Hypnotherapist",
+        "multi": "Multiple specialties"
+      },
+      "submit": "Create my account",
+      "has_account": "Already have an account?",
+      "signin_link": "Sign in",
+      "terms": "By creating an account, you agree to our",
+      "terms_link": "terms of service",
+      "and": "and our",
+      "privacy_link": "privacy policy"
+    },
+    "forgot": {
+      "title": "Reset password",
+      "subtitle": "Enter your email to receive a reset link",
+      "email": "Email",
+      "submit": "Send reset link",
+      "back": "Back to sign in",
+      "success": "Check your inbox — a reset link has been sent to you."
+    },
+    "reset": {
+      "title": "New password",
+      "subtitle": "Choose a new secure password",
+      "password": "New password",
+      "confirm": "Confirm password",
+      "submit": "Reset password"
+    },
+    "errors": {
+      "invalid_credentials": "Invalid email or password",
+      "email_taken": "This email is already in use",
+      "weak_password": "Password must be at least 8 characters",
+      "generic": "An error occurred. Please try again."
+    }
+  },
+  "footer": {
+    "tagline": "The digital guide for wellness practitioners.",
+    "product": "Product",
+    "legal": "Legal",
+    "links": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "blog": "Blog",
+      "changelog": "Changelog",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "cookies": "Cookies",
+      "data_protection": "Data protection"
+    },
+    "copyright": "© 2025 Naya. All rights reserved.",
+    "rgpd_note": "Data hosted in Europe • GDPR compliant"
+  }
+}

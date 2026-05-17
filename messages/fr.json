@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "title": "Naya — Le guide digital des praticiens du bien-être",
+    "description": "Structurez vos cures, prolongez l'effet de vos séances, développez votre activité."
+  },
+  "nav": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages",
+    "faq": "FAQ",
+    "signin": "Se connecter",
+    "signup": "Commencer gratuitement"
+  },
+  "hero": {
+    "eyebrow": "Le guide digital des praticiens du bien-être",
+    "title": "Naya",
+    "subtitle": "Structurez vos cures, prolongez l'effet de vos séances, développez votre activité.",
+    "cta_primary": "Commencer gratuitement",
+    "cta_secondary": "Voir la démo",
+    "badge": "Conçu pour naturopathes, sophrologues, hypnothérapeutes"
+  },
+  "pillars": {
+    "title": "Tout ce dont vous avez besoin",
+    "subtitle": "Une plateforme pensée pour les praticiens du bien-être.",
+    "ai": {
+      "title": "Cures structurées par IA",
+      "description": "Générez des protocoles personnalisés en quelques secondes à partir de l'anamnèse de votre client. Naturopathie, sophrologie, hypnothérapie — chaque spécialité a son propre modèle."
+    },
+    "portal": {
+      "title": "Portail client mobile engagé",
+      "description": "Vos clients accèdent à leur cure depuis leur smartphone, réécoutent les audios sophro/hypno, tiennent leur journal d'humeur. L'effet de vos séances se prolonge dans le temps."
+    },
+    "b2b": {
+      "title": "Marché entreprises QVCT",
+      "description": "Proposez des programmes bien-être aux entreprises. Générez des propositions commerciales convaincantes, suivez les participants, facturez en multi-échéances."
+    }
+  },
+  "pricing": {
+    "title": "Des tarifs transparents",
+    "subtitle": "Commencez gratuitement, évoluez quand vous êtes prêt.",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "save": "Économisez 20%",
+    "per_month": "/ mois",
+    "popular": "Populaire",
+    "plans": {
+      "free": {
+        "name": "Découverte",
+        "price": "0",
+        "description": "Pour découvrir Naya et commencer à structurer votre activité.",
+        "features": [
+          "5 clients maximum",
+          "3 protocoles IA / mois",
+          "2 audios générés / mois",
+          "Portail client de base",
+          "Anamnèse digitalisée",
+          "Support email"
+        ],
+        "cta": "Commencer gratuitement"
+      },
+      "cabinet": {
+        "name": "Cabinet",
+        "price": "39",
+        "description": "Pour les praticiens qui veulent développer leur cabinet en solo.",
+        "features": [
+          "Clients illimités",
+          "30 protocoles IA / mois",
+          "20 audios générés / mois",
+          "Portail client complet avec PWA",
+          "Branding personnalisé",
+          "PDF protocoles à votre marque",
+          "Boutique produits",
+          "Support prioritaire"
+        ],
+        "cta": "Choisir Cabinet"
+      },
+      "cabinet_plus": {
+        "name": "Cabinet + Entreprise",
+        "price": "79",
+        "description": "Pour les praticiens qui veulent développer le volet B2B QVCT.",
+        "features": [
+          "Tout Cabinet, plus...",
+          "Module entreprises QVCT",
+          "Protocoles illimités",
+          "Audios illimités",
+          "Clone vocal ElevenLabs",
+          "Propositions commerciales IA",
+          "Facturation multi-échéances",
+          "Compte-rendu DRH automatisé",
+          "Support dédié"
+        ],
+        "cta": "Choisir Cabinet + Entreprise"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Ce qu'ils en disent",
+    "items": [
+      {
+        "name": "Sophie M.",
+        "role": "Naturopathe, Lyon",
+        "content": "Naya a transformé ma façon de travailler. Je génère des protocoles en 5 minutes au lieu de 2 heures. Mes clients adorent le portail mobile."
+      },
+      {
+        "name": "Marc T.",
+        "role": "Sophrologue, Paris",
+        "content": "Le module entreprises m'a permis de décrocher mon premier contrat QVCT avec une PME de 200 personnes. La proposition commerciale générée par l'IA était bluffante."
+      },
+      {
+        "name": "Isabelle R.",
+        "role": "Hypnothérapeute, Bordeaux",
+        "content": "Mes clients réécoutent les audios entre les séances. Les résultats sont bien meilleurs et le journal d'humeur me permet de suivre leur progression."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": [
+      {
+        "question": "Naya est-il conforme au RGPD ?",
+        "answer": "Oui, entièrement. Les données sont hébergées en Europe (Supabase EU). Les anamnèses et données de santé sont chiffrées au repos. Un modèle de consentement RGPD est intégré avec signature électronique. Vous gardez le contrôle total de vos données."
+      },
+      {
+        "question": "L'IA pose-t-elle des diagnostics médicaux ?",
+        "answer": "Non, jamais. Naya est un outil d'aide à la structuration des cures, pas un outil médical. Tous les protocoles générés contiennent un disclaimer clair : « Ces recommandations relèvent du conseil en hygiène de vie et ne se substituent pas à un avis médical. »"
+      },
+      {
+        "question": "Puis-je utiliser mon propre branding ?",
+        "answer": "Oui, dès le plan Cabinet. Vous pouvez ajouter votre logo, votre couleur d'accent et votre slogan. Les PDFs protocoles et le portail client refléteront votre identité de marque."
+      },
+      {
+        "question": "Comment fonctionne le clone vocal ElevenLabs ?",
+        "answer": "En plan Cabinet + Entreprise, vous pouvez enregistrer votre voix pour créer un clone vocal et générer des audios sophro/hypno avec votre propre voix. Cette fonctionnalité nécessite une validation d'identité et un consentement explicite."
+      },
+      {
+        "question": "Puis-je annuler à tout moment ?",
+        "answer": "Oui, sans engagement ni frais de résiliation. Vos données restent accessibles 30 jours après l'annulation, le temps de les exporter."
+      },
+      {
+        "question": "Le portail client est-il une application mobile ?",
+        "answer": "C'est une PWA (Progressive Web App) : vos clients peuvent l'ajouter à leur écran d'accueil comme une vraie app, sans passer par l'App Store. Ça fonctionne sur iOS et Android."
+      }
+    ]
+  },
+  "auth": {
+    "signin": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous à votre espace Naya",
+      "email": "Email",
+      "password": "Mot de passe",
+      "forgot": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "no_account": "Pas encore de compte ?",
+      "signup_link": "Créer un compte"
+    },
+    "signup": {
+      "title": "Créer votre compte",
+      "subtitle": "Commencez gratuitement, aucune carte requise",
+      "full_name": "Nom complet",
+      "email": "Email professionnel",
+      "password": "Mot de passe",
+      "specialty": "Votre spécialité",
+      "specialty_options": {
+        "naturopathe": "Naturopathe",
+        "sophrologue": "Sophrologue",
+        "hypnotherapeute": "Hypnothérapeute",
+        "multi": "Plusieurs spécialités"
+      },
+      "submit": "Créer mon compte",
+      "has_account": "Déjà un compte ?",
+      "signin_link": "Se connecter",
+      "terms": "En créant un compte, vous acceptez nos",
+      "terms_link": "conditions d'utilisation",
+      "and": "et notre",
+      "privacy_link": "politique de confidentialité"
+    },
+    "forgot": {
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+      "email": "Email",
+      "submit": "Envoyer le lien",
+      "back": "Retour à la connexion",
+      "success": "Vérifiez votre boîte email — un lien de réinitialisation vous a été envoyé."
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe sécurisé",
+      "password": "Nouveau mot de passe",
+      "confirm": "Confirmer le mot de passe",
+      "submit": "Réinitialiser le mot de passe"
+    },
+    "errors": {
+      "invalid_credentials": "Email ou mot de passe incorrect",
+      "email_taken": "Cet email est déjà utilisé",
+      "weak_password": "Le mot de passe doit contenir au moins 8 caractères",
+      "generic": "Une erreur est survenue. Veuillez réessayer."
+    }
+  },
+  "footer": {
+    "tagline": "Le guide digital des praticiens du bien-être.",
+    "product": "Produit",
+    "legal": "Légal",
+    "links": {
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "blog": "Blog",
+      "changelog": "Changelog",
+      "terms": "CGU",
+      "privacy": "Confidentialité",
+      "cookies": "Cookies",
+      "data_protection": "Protection des données"
+    },
+    "copyright": "© 2025 Naya. Tous droits réservés.",
+    "rgpd_note": "Données hébergées en Europe • RGPD conforme"
+  }
+}
