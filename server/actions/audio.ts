@@ -1,6 +1,6 @@
-export const runtime = "nodejs";
+"use server";
 
-("use server");
+export const runtime = "nodejs";
 
 import { createClient } from "@/lib/supabase/server";
 import { checkQuota, incrementQuota } from "@/lib/quotas";
