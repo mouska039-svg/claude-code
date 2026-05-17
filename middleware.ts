@@ -1,7 +1,54 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
+interface TokenBucket {
+  tokens: number;
+  lastRefill: number;
+}
+
+const rateLimitMap = new Map<string, TokenBucket>();
+
+const RATE_LIMIT = 60;
+const WINDOW_MS = 60_000;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const bucket = rateLimitMap.get(ip);
+
+  if (!bucket) {
+    rateLimitMap.set(ip, { tokens: RATE_LIMIT - 1, lastRefill: now });
+    return false;
+  }
+
+  const elapsed = now - bucket.lastRefill;
+  if (elapsed >= WINDOW_MS) {
+    bucket.tokens = RATE_LIMIT - 1;
+    bucket.lastRefill = now;
+    return false;
+  }
+
+  if (bucket.tokens <= 0) {
+    return true;
+  }
+
+  bucket.tokens -= 1;
+  return false;
+}
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/")) {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      "unknown";
+
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: "Trop de requêtes" }, { status: 429 });
+    }
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -27,9 +74,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
-
-  // Protect /dashboard/* routes
   if (pathname.startsWith("/dashboard") && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
@@ -37,7 +81,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Redirect authenticated users away from auth pages
   if (
     user &&
     (pathname === "/sign-in" ||
@@ -48,9 +91,6 @@ export async function middleware(request: NextRequest) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
-
-  // Portal routes use separate magic-link auth — handled by portal layout
-  // No redirect here; portal middleware is handled within /portal
 
   return supabaseResponse;
 }
