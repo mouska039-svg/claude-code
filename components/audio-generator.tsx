@@ -31,7 +31,7 @@ export function AudioGenerator({ sessionId }: { sessionId: string }) {
       {audioUrl ? (
         <div className="space-y-3">
           <p className="text-sm text-sage font-medium">Audio généré avec succès</p>
-          <audio controls src={audioUrl} className="w-full" />
+          <audio key={audioUrl} controls src={audioUrl} className="w-full" />
           <a
             href={audioUrl}
             target="_blank"
