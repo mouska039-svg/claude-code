@@ -1,7 +1,5 @@
 "use server";
 
-export const runtime = "nodejs";
-
 import { createClient } from "@/lib/supabase/server";
 import { checkQuota, incrementQuota } from "@/lib/quotas";
 import { redirect } from "next/navigation";
