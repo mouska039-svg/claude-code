@@ -2,6 +2,8 @@
 
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { createCompany } from "@/server/actions/companies";
 
 export default function NewCompanyPage() {
@@ -23,6 +25,14 @@ export default function NewCompanyPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <Link
+        href="/dashboard/companies"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
+      >
+        <ChevronLeft className="w-4 h-4" />
+        Entreprises
+      </Link>
+
       <div>
         <h1 className="font-fraunces text-3xl font-semibold text-ink">
           Nouvelle entreprise
@@ -45,75 +55,99 @@ export default function NewCompanyPage() {
           </h2>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-foreground mb-1.5"
+            >
               Nom de l&apos;entreprise <span className="text-red-500">*</span>
             </label>
             <input
+              id="name"
               name="name"
               required
               minLength={2}
               placeholder="Acme SAS"
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
+              <label
+                htmlFor="contact_name"
+                className="block text-sm font-medium text-foreground mb-1.5"
+              >
                 Nom du contact
               </label>
               <input
+                id="contact_name"
                 name="contact_name"
                 placeholder="Julie Martin"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
+              <label
+                htmlFor="contact_email"
+                className="block text-sm font-medium text-foreground mb-1.5"
+              >
                 Email du contact
               </label>
               <input
+                id="contact_email"
                 name="contact_email"
                 type="email"
                 placeholder="julie@acme.fr"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
               />
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
+              <label
+                htmlFor="siret"
+                className="block text-sm font-medium text-foreground mb-1.5"
+              >
                 SIRET
               </label>
               <input
+                id="siret"
                 name="siret"
                 placeholder="123 456 789 00012"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
+              <label
+                htmlFor="sector"
+                className="block text-sm font-medium text-foreground mb-1.5"
+              >
                 Secteur
               </label>
               <input
+                id="sector"
                 name="sector"
                 placeholder="Technologie, Santé…"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">
+            <label
+              htmlFor="employee_count"
+              className="block text-sm font-medium text-foreground mb-1.5"
+            >
               Nombre d&apos;employés
             </label>
             <input
+              id="employee_count"
               name="employee_count"
               type="number"
               min="1"
               placeholder="50"
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 min-h-[44px]"
             />
           </div>
         </div>
