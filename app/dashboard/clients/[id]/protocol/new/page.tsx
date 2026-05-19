@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { generateProtocol } from "@/server/actions/protocols";
 import type { Database } from "@/types/supabase";
 
@@ -22,11 +24,17 @@ type GeneratedOutput = {
   disclaimer: string;
 };
 
-const SPECIALTY_LABELS: Record<string, string> = {
-  naturopathe: "Naturopathie",
-  sophrologue: "Sophrologie",
-  hypnotherapeute: "Hypnothérapie",
-};
+const SPECIALTY_OPTIONS: {
+  value: "naturopathe" | "sophrologue" | "hypnotherapeute";
+  label: string;
+}[] = [
+  { value: "naturopathe", label: "Naturopathe" },
+  { value: "sophrologue", label: "Sophrologue" },
+  { value: "hypnotherapeute", label: "Hypnothérapeute" },
+];
+
+const RGPD_DISCLAIMER =
+  "Ces recommandations sont des conseils en hygiène de vie générés par IA et ne constituent pas un avis médical. Elles ne remplacent pas une consultation médicale. Consultez votre médecin avant toute modification de traitement ou de prise en charge.";
 
 export default function NewProtocolPage() {
   const params = useParams<{ id: string }>();
@@ -57,28 +65,31 @@ export default function NewProtocolPage() {
     const output = result.output as GeneratedOutput | null;
     return (
       <div className="max-w-3xl mx-auto space-y-6">
-        <div>
-          <button
-            onClick={() => router.push(`/dashboard/clients/${params.id}`)}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        {/* Breadcrumb */}
+        <nav aria-label="Fil d'Ariane">
+          <Link
+            href={`/dashboard/clients/${params.id}`}
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] py-2"
           >
-            ← Retour au client
-          </button>
-          <h1 className="font-fraunces text-3xl font-semibold text-ink mt-2">
-            {result.title}
-          </h1>
+            <ChevronLeft size={14} aria-hidden="true" />
+            Retour au client
+          </Link>
+        </nav>
+
+        {/* Title */}
+        <div>
+          <h1 className="font-fraunces text-xl font-semibold text-ink">{result.title}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Protocole généré · {output?.duration_weeks ?? "?"} semaine
             {(output?.duration_weeks ?? 0) > 1 ? "s" : ""}
           </p>
         </div>
 
-        {output?.disclaimer && (
-          <div className="rounded-lg border border-terracotta/30 bg-terracotta/5 px-4 py-3">
-            <p className="text-sm text-terracotta font-medium">⚠ Avertissement</p>
-            <p className="text-sm text-terracotta/90 mt-1">{output.disclaimer}</p>
-          </div>
-        )}
+        {/* RGPD disclaimer — amber box at top */}
+        <div className="rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3">
+          <p className="font-medium mb-0.5">Avertissement RGPD &amp; médical</p>
+          <p>{RGPD_DISCLAIMER}</p>
+        </div>
 
         {output?.summary && (
           <div className="rounded-xl bg-card border border-border p-6">
@@ -165,13 +176,13 @@ export default function NewProtocolPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push(`/dashboard/clients/${params.id}`)}
-            className="rounded-lg bg-sage text-white px-5 py-2 text-sm font-medium hover:bg-sage/90 transition-colors"
+            className="rounded-lg bg-sage text-white px-5 py-2 text-sm font-medium hover:bg-sage/90 transition-colors min-h-[44px]"
           >
-            Voir tous les protocoles
+            Voir le client
           </button>
           <button
             onClick={() => setResult(null)}
-            className="rounded-lg border border-input bg-card px-5 py-2 text-sm font-medium hover:bg-muted transition-colors"
+            className="rounded-lg border border-input bg-card px-5 py-2 text-sm font-medium hover:bg-muted transition-colors min-h-[44px]"
           >
             Générer un autre
           </button>
@@ -182,14 +193,19 @@ export default function NewProtocolPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div>
-        <button
-          onClick={() => router.push(`/dashboard/clients/${params.id}`)}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+      {/* Breadcrumb */}
+      <nav aria-label="Fil d'Ariane">
+        <Link
+          href={`/dashboard/clients/${params.id}`}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] py-2"
         >
-          ← Retour au client
-        </button>
-        <h1 className="font-fraunces text-3xl font-semibold text-ink mt-2">
+          <ChevronLeft size={14} aria-hidden="true" />
+          Retour au client
+        </Link>
+      </nav>
+
+      <div>
+        <h1 className="font-fraunces text-3xl font-semibold text-ink">
           Générer un protocole
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
@@ -205,39 +221,48 @@ export default function NewProtocolPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="rounded-xl bg-card border border-border p-6 space-y-5">
+          {/* Specialty toggle buttons */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Spécialité
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {(["naturopathe", "sophrologue", "hypnotherapeute"] as const).map((s) => (
+              {SPECIALTY_OPTIONS.map((opt) => (
                 <button
-                  key={s}
+                  key={opt.value}
                   type="button"
-                  onClick={() => setSpecialty(s)}
-                  className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                    specialty === s
-                      ? "border-sage bg-sage/10 text-sage"
+                  onClick={() => setSpecialty(opt.value)}
+                  className={`rounded-lg border px-3 text-sm font-medium transition-colors min-h-[44px] ${
+                    specialty === opt.value
+                      ? "bg-sage text-white border-sage"
                       : "border-input bg-background text-foreground hover:bg-muted"
                   }`}
                 >
-                  {SPECIALTY_LABELS[s]}
+                  {opt.label}
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Context textarea */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">
-              Contexte <span className="text-red-500">*</span>
+            <label
+              htmlFor="context"
+              className="block text-sm font-medium text-foreground mb-1.5"
+            >
+              Contexte de la consultation{" "}
+              <span className="text-red-500" aria-hidden="true">
+                *
+              </span>
             </label>
             <textarea
+              id="context"
               rows={6}
               value={context}
               onChange={(e) => setContext(e.target.value)}
               required
-              placeholder="Décrivez la situation du client : symptômes, objectifs, mode de vie, contraintes…"
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 resize-none"
+              placeholder="Décrivez les objectifs du client, ses habitudes de vie, ses contraintes…"
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50 resize-none min-h-[120px]"
             />
             <p className="text-xs text-muted-foreground mt-1">
               Plus le contexte est précis, plus le protocole sera pertinent.
@@ -245,26 +270,31 @@ export default function NewProtocolPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-terracotta/30 bg-terracotta/5 px-4 py-3">
-          <p className="text-sm text-terracotta/90">
-            Ces recommandations relèvent du conseil en hygiène de vie et ne se substituent
-            pas à un avis médical. Consultez votre médecin avant toute modification de
-            traitement.
-          </p>
+        {/* RGPD disclaimer — amber box */}
+        <div className="rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3">
+          <p className="font-medium mb-0.5">Information importante</p>
+          <p>{RGPD_DISCLAIMER}</p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             type="submit"
             disabled={isPending || !context.trim()}
-            className="rounded-lg bg-sage text-white px-5 py-2 text-sm font-medium hover:bg-sage/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-5 py-2 text-sm font-medium hover:bg-sage/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors min-h-[44px]"
           >
-            {isPending ? "Génération en cours…" : "Générer le protocole"}
+            {isPending ? (
+              <>
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                Génération en cours…
+              </>
+            ) : (
+              "Générer le protocole IA ✦"
+            )}
           </button>
           <button
             type="button"
             onClick={() => router.push(`/dashboard/clients/${params.id}`)}
-            className="rounded-lg border border-input bg-card px-5 py-2 text-sm font-medium hover:bg-muted transition-colors"
+            className="rounded-lg border border-input bg-card px-5 py-2 text-sm font-medium hover:bg-muted transition-colors min-h-[44px]"
           >
             Annuler
           </button>

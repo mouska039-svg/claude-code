@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="logo-naya-mark-title">
+  <title id="logo-naya-mark-title">Naya</title>
+  <!-- Rounded square background -->
+  <rect width="32" height="32" rx="7" fill="#5C7A6B" />
+  <!-- Stylized N letterform using paths -->
+  <!-- Left vertical stroke -->
+  <rect x="7" y="8" width="4" height="16" rx="1.5" fill="#F5EFE6" />
+  <!-- Right vertical stroke -->
+  <rect x="21" y="8" width="4" height="16" rx="1.5" fill="#F5EFE6" />
+  <!-- Diagonal connector from top-left to bottom-right -->
+  <path d="M11 8.5 L21 23.5" stroke="#F5EFE6" stroke-width="3.5" stroke-linecap="round" />
+  <!-- Terracotta accent dot: small circle at bottom-right of mark -->
+  <circle cx="24" cy="25.5" r="2.5" fill="#D4876B" />
+</svg>

@@ -32,9 +32,8 @@ export function DashboardSidebar() {
     <aside className="hidden lg:flex flex-col w-64 bg-sidebar border-r border-sidebar-border">
       {/* Logo */}
       <div className="flex items-center h-16 px-6 border-b border-sidebar-border">
-        <Link href="/dashboard" className="font-fraunces text-xl font-semibold text-ink">
-          naya
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-terracotta mb-2 ml-0.5" />
+        <Link href="/dashboard">
+          <img src="/logo-naya.svg" alt="Naya" className="h-7 w-auto" />
         </Link>
       </div>
 

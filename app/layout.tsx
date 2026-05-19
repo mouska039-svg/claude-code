@@ -31,6 +31,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
   },
+  icons: {
+    icon: "/logo-naya-mark.svg",
+    apple: "/logo-naya-mark.svg",
+  },
 };
 
 export default function RootLayout({

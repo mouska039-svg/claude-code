@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" role="img" aria-labelledby="logo-naya-title">
+  <title id="logo-naya-title">Naya</title>
+  <!-- Wordmark: "naya" in serif style with terracotta accent dot -->
+  <text
+    x="6"
+    y="28"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="26"
+    font-weight="400"
+    letter-spacing="-0.5"
+    fill="#2C2C2A"
+  >naya</text>
+  <!-- Terracotta accent dot integrated after the wordmark -->
+  <circle cx="111" cy="22" r="3.5" fill="#D4876B" />
+</svg>

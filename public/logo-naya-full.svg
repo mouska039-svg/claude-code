@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 56" role="img" aria-labelledby="logo-naya-full-title">
+  <title id="logo-naya-full-title">Naya — Bien-être professionnel</title>
+  <!-- Wordmark "naya" -->
+  <text
+    x="6"
+    y="32"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="28"
+    font-weight="400"
+    letter-spacing="-0.5"
+    fill="#2C2C2A"
+  >naya</text>
+  <!-- Terracotta accent dot after wordmark -->
+  <circle cx="119" cy="25" r="3.5" fill="#D4876B" />
+  <!-- Tagline: "bien-être professionnel" -->
+  <text
+    x="6"
+    y="46"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="10"
+    font-weight="400"
+    letter-spacing="0.3"
+    fill="#5C7A6B"
+  >bien-être professionnel</text>
+</svg>
