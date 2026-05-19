@@ -63,7 +63,7 @@ export async function generateAudio(
   const adminClient = createAdminClient();
 
   const { error: uploadError } = await adminClient.storage
-    .from("session-audios")
+    .from("session-audio")
     .upload(fileName, audioBuffer, { contentType: "audio/mpeg", upsert: false });
 
   if (uploadError) {
