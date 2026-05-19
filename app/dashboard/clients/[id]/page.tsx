@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronLeft, FileText, Sparkles, Calendar } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
+import { ClientPortalButton } from "@/components/client-portal-button";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -148,6 +149,16 @@ export default async function ClientDetailPage({
           <Calendar size={15} aria-hidden="true" />
           Nouvelle séance
         </Link>
+      </div>
+
+      {/* Portal */}
+      <div className="rounded-xl bg-card border border-border p-6 space-y-3">
+        <h2 className="text-base font-semibold text-foreground">Portail client</h2>
+        <p className="text-sm text-muted-foreground">
+          Générez un lien sécurisé pour que votre client accède à ses protocoles et
+          séances.
+        </p>
+        <ClientPortalButton clientId={id} />
       </div>
 
       {/* Client info card */}

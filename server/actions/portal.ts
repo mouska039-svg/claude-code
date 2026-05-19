@@ -7,6 +7,48 @@ import type { Database } from "@/types/supabase";
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ShareTokenRow = Database["public"]["Tables"]["share_tokens"]["Row"];
 
+export async function generatePortalLink(
+  clientId: string
+): Promise<{ url?: string; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/sign-in");
+
+  const { data: client } = await supabase
+    .from("clients")
+    .select("id")
+    .eq("id", clientId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!client) return { error: "Client introuvable" };
+
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  const token = Array.from(array)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  await supabase.from("share_tokens").delete().eq("resource_id", clientId);
+
+  const { error } = await supabase.from("share_tokens").insert({
+    token,
+    resource_type: "client_portal",
+    resource_id: clientId,
+    expires_at: expiresAt,
+  });
+
+  if (error) return { error: "Erreur lors de la génération du lien" };
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://naya-praticien.vercel.app";
+  return { url: `${appUrl}/portal/${token}` };
+}
+
 export async function createShareToken(
   clientId: string
 ): Promise<{ token?: string; error?: string }> {
