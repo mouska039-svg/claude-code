@@ -88,9 +88,11 @@ export async function updateInvoiceStatus(
 
   if (!user) redirect("/sign-in");
 
+  const paidAt = status === "paid" ? new Date().toISOString() : null;
+
   const { error } = await supabase
     .from("invoices")
-    .update({ status })
+    .update({ status, paid_at: paidAt })
     .eq("id", invoiceId)
     .eq("user_id", user.id);
 

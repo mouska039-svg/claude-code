@@ -164,8 +164,9 @@ export default async function InvoicesPage() {
             const invoiceNumber = getInvoiceNumber(invoice, invoices.length - 1 - index);
 
             return (
-              <div
+              <Link
                 key={invoice.id}
+                href={`/dashboard/invoices/${invoice.id}`}
                 className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
               >
                 <div className="min-w-0 flex-1">
@@ -201,7 +202,7 @@ export default async function InvoicesPage() {
                     {statusLabels[invoice.status]}
                   </span>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
