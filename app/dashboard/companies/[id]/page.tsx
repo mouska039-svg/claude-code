@@ -28,6 +28,12 @@ const formatLabels: Record<CompanyProgramRow["format"], string> = {
   subscription: "Abonnement",
 };
 
+const formatColors: Record<CompanyProgramRow["format"], string> = {
+  workshop: "bg-sage/10 text-sage",
+  individual_session: "bg-blue-50 text-blue-700",
+  subscription: "bg-purple-50 text-purple-700",
+};
+
 export default async function CompanyDetailPage({
   params,
 }: {
@@ -125,15 +131,15 @@ export default async function CompanyDetailPage({
         </h2>
 
         {programs.length === 0 ? (
-          <div className="rounded-xl bg-card border border-border p-8 text-center">
-            <p className="text-muted-foreground text-sm">
+          <div className="rounded-xl bg-card border border-border p-8 text-center flex flex-col items-center gap-3">
+            <p className="text-muted-foreground text-sm font-medium">
               Aucun programme pour cette entreprise.
             </p>
             <Link
               href={`/dashboard/companies/${id}/programs/new`}
-              className="inline-block mt-3 text-sm text-sage hover:underline"
+              className="inline-flex items-center gap-1 rounded-lg bg-sage text-white px-4 min-h-[44px] text-sm font-medium hover:bg-sage/90 transition-colors"
             >
-              Créer le premier programme →
+              Créer un programme
             </Link>
           </div>
         ) : (
@@ -147,18 +153,20 @@ export default async function CompanyDetailPage({
                   <p className="text-sm font-medium text-foreground truncate">
                     {program.title}
                   </p>
-                  <div className="flex items-center gap-3 mt-0.5">
-                    <p className="text-xs text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${formatColors[program.format]}`}
+                    >
                       {formatLabels[program.format]}
-                    </p>
+                    </span>
                     {program.start_date && (
                       <p className="text-xs text-muted-foreground">
                         {new Date(program.start_date).toLocaleDateString("fr-FR")}
                       </p>
                     )}
                     {program.price_total !== null && (
-                      <p className="text-xs text-muted-foreground">
-                        {program.price_total.toLocaleString("fr-FR")} €
+                      <p className="text-xs text-muted-foreground font-mono tabular-nums">
+                        {program.price_total.toLocaleString("fr-FR")} € HT
                       </p>
                     )}
                   </div>
