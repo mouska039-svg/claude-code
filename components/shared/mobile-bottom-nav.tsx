@@ -8,6 +8,7 @@ import {
   Users,
   Calendar,
   Receipt,
+  CreditCard,
   MoreHorizontal,
   FileText,
   ShoppingBag,
@@ -21,13 +22,14 @@ const PRIMARY_NAV = [
   { label: "Aperçu", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "Clients", href: "/dashboard/clients", icon: Users },
   { label: "Séances", href: "/dashboard/sessions", icon: Calendar },
-  { label: "Facturation", href: "/dashboard/billing", icon: Receipt },
+  { label: "Factures", href: "/dashboard/invoices", icon: Receipt },
 ];
 
 const SECONDARY_NAV = [
   { label: "Cures & protocoles", href: "/dashboard/protocols", icon: FileText },
   { label: "Boutique", href: "/dashboard/shop", icon: ShoppingBag },
   { label: "Entreprises", href: "/dashboard/companies", icon: Building2 },
+  { label: "Abonnement", href: "/dashboard/billing", icon: CreditCard },
   { label: "Paramètres", href: "/dashboard/settings", icon: Settings },
 ];
 
