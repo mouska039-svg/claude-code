@@ -217,8 +217,9 @@ export default async function ClientDetailPage({
         ) : (
           <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
             {protocols.map((protocol) => (
-              <div
+              <Link
                 key={protocol.id}
+                href={`/dashboard/clients/${id}/protocol/${protocol.id}`}
                 className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
               >
                 <div className="min-w-0 flex-1">
@@ -241,7 +242,7 @@ export default async function ClientDetailPage({
                 >
                   {statusLabel[protocol.status]}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         )}
