@@ -6,18 +6,21 @@ import type { Database } from "@/types/supabase";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-04-22.dahlia",
-});
-
-const PLAN_PRICE_MAP: Record<string, string> = {
-  cabinet: process.env.STRIPE_PRICE_CABINET_MONTHLY!,
-  cabinet_plus: process.env.STRIPE_PRICE_CABINET_PLUS_MONTHLY!,
-};
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-04-22.dahlia",
+  });
+}
 
 export async function createCheckoutSession(
   plan: "cabinet" | "cabinet_plus"
 ): Promise<{ url?: string; error?: string }> {
+  const stripe = getStripe();
+  const planPriceMap: Record<string, string> = {
+    cabinet: process.env.STRIPE_PRICE_CABINET_MONTHLY!,
+    cabinet_plus: process.env.STRIPE_PRICE_CABINET_PLUS_MONTHLY!,
+  };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -45,7 +48,7 @@ export async function createCheckoutSession(
       .eq("user_id", user.id);
   }
 
-  const priceId = PLAN_PRICE_MAP[plan];
+  const priceId = planPriceMap[plan];
   if (!priceId) return { error: "Plan invalide" };
 
   const session = await stripe.checkout.sessions.create({
@@ -62,6 +65,7 @@ export async function createCheckoutSession(
 }
 
 export async function createPortalSession(): Promise<{ url?: string; error?: string }> {
+  const stripe = getStripe();
   const supabase = await createClient();
   const {
     data: { user },
