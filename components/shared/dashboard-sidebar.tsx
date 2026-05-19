@@ -10,6 +10,7 @@ import {
   ShoppingBag,
   Building2,
   Receipt,
+  CreditCard,
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,8 @@ const NAV_ITEMS = [
   { label: "Séances", href: "/dashboard/sessions", icon: Calendar },
   { label: "Boutique", href: "/dashboard/shop", icon: ShoppingBag },
   { label: "Entreprises", href: "/dashboard/companies", icon: Building2 },
-  { label: "Facturation", href: "/dashboard/billing", icon: Receipt },
+  { label: "Factures clients", href: "/dashboard/invoices", icon: Receipt },
+  { label: "Abonnement", href: "/dashboard/billing", icon: CreditCard },
   { label: "Paramètres", href: "/dashboard/settings", icon: Settings },
 ];
 
