@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+import { ChevronLeft, FileText, Sparkles, Calendar } from "lucide-react";
+import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
@@ -64,17 +66,43 @@ export default async function ClientDetailPage({
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <Link
-            href="/dashboard/clients"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Retour aux clients
-          </Link>
-          <h1 className="font-fraunces text-3xl font-semibold text-ink mt-2">
+      {/* Breadcrumb */}
+      <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm">
+        <Link
+          href="/dashboard/clients"
+          className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors min-h-[44px] py-2"
+        >
+          <ChevronLeft size={14} aria-hidden="true" />
+          Clients
+        </Link>
+        <span className="text-muted-foreground/50" aria-hidden="true">
+          /
+        </span>
+        <span className="text-foreground font-medium truncate max-w-[200px]">
+          {client.full_name}
+        </span>
+      </nav>
+
+      {/* Client header */}
+      <div className="flex items-start gap-5">
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-sage text-white text-xl font-semibold"
+          aria-hidden="true"
+        >
+          {getInitials(client.full_name)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h1 className="font-fraunces text-2xl font-semibold text-ink leading-tight">
             {client.full_name}
           </h1>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+            {client.email && (
+              <p className="text-sm text-muted-foreground">{client.email}</p>
+            )}
+            {client.phone && (
+              <p className="text-sm text-muted-foreground">{client.phone}</p>
+            )}
+          </div>
           <span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium mt-2 ${
               client.status === "active"
@@ -89,16 +117,40 @@ export default async function ClientDetailPage({
                 : "Archivé"}
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href={`/dashboard/clients/${id}/edit`}
-            className="rounded-lg border border-input bg-card px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
-          >
-            Modifier
-          </Link>
-        </div>
+        <Link
+          href={`/dashboard/clients/${id}/edit`}
+          className="inline-flex items-center min-h-[44px] rounded-lg border border-input bg-card px-4 py-2 text-sm font-medium hover:bg-muted transition-colors shrink-0"
+        >
+          Modifier
+        </Link>
       </div>
 
+      {/* Quick action strip */}
+      <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+        <Link
+          href={`/dashboard/clients/${id}/anamnese`}
+          className="inline-flex items-center gap-2 min-h-[44px] shrink-0 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2.5 text-sm font-medium text-sage hover:bg-sage/15 transition-colors"
+        >
+          <FileText size={15} aria-hidden="true" />
+          Anamnèse
+        </Link>
+        <Link
+          href={`/dashboard/clients/${id}/protocol/new`}
+          className="inline-flex items-center gap-2 min-h-[44px] shrink-0 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2.5 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors"
+        >
+          <Sparkles size={15} aria-hidden="true" />
+          Nouveau protocole
+        </Link>
+        <Link
+          href={`/dashboard/sessions/new?clientId=${id}`}
+          className="inline-flex items-center gap-2 min-h-[44px] shrink-0 rounded-lg bg-brume/30 border border-brume/50 px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brume/40 transition-colors"
+        >
+          <Calendar size={15} aria-hidden="true" />
+          Nouvelle séance
+        </Link>
+      </div>
+
+      {/* Client info card */}
       <div className="rounded-xl bg-card border border-border p-6 space-y-4">
         <h2 className="text-base font-semibold text-foreground">Informations</h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -135,78 +187,62 @@ export default async function ClientDetailPage({
         </dl>
       </div>
 
-      <div className="rounded-xl bg-card border border-border p-6 space-y-4">
-        <h2 className="text-base font-semibold text-foreground">Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={`/dashboard/clients/${id}/anamnese`}
-            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2 text-sm font-medium text-sage hover:bg-sage/15 transition-colors"
-          >
-            Anamnèse
-          </Link>
-          <Link
-            href={`/dashboard/clients/${id}/protocol/new`}
-            className="inline-flex items-center gap-2 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors"
-          >
-            + Générer un protocole
-          </Link>
-        </div>
-      </div>
-
+      {/* Protocols section */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-foreground">
             Protocoles ({protocols.length})
           </h2>
         </div>
+
         {protocols.length === 0 ? (
-          <div className="rounded-xl bg-card border border-border p-8 text-center">
-            <p className="text-sm text-muted-foreground">
-              Aucun protocole pour ce client.
-            </p>
+          <div className="rounded-xl bg-card border border-border p-10 flex flex-col items-center text-center gap-4">
+            <div className="rounded-full bg-muted p-3">
+              <Sparkles className="text-muted-foreground" size={24} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Aucun protocole</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                Générez un protocole personnalisé grâce à l&apos;IA
+              </p>
+            </div>
             <Link
               href={`/dashboard/clients/${id}/protocol/new`}
-              className="inline-block mt-3 text-sm text-sage hover:underline"
+              className="inline-flex items-center gap-2 min-h-[44px] rounded-lg bg-terracotta text-white px-5 py-2.5 text-sm font-medium hover:bg-terracotta/90 transition-colors"
             >
-              Générer le premier protocole →
+              <Sparkles size={14} aria-hidden="true" />
+              Générer un protocole IA
             </Link>
           </div>
         ) : (
           <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
-            {protocols.map((protocol) => {
-              const output = protocol.output as {
-                title?: string;
-                summary?: string;
-                duration_weeks?: number;
-              } | null;
-              return (
-                <div
-                  key={protocol.id}
-                  className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {protocol.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {output?.duration_weeks
-                        ? `${output.duration_weeks} semaine${output.duration_weeks > 1 ? "s" : ""} · `
-                        : ""}
-                      {new Intl.DateTimeFormat("fr-FR", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }).format(new Date(protocol.created_at))}
-                    </p>
-                  </div>
-                  <span
-                    className={`ml-4 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusClass[protocol.status]}`}
-                  >
-                    {statusLabel[protocol.status]}
-                  </span>
+            {protocols.map((protocol) => (
+              <div
+                key={protocol.id}
+                className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {protocol.title}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {protocol.duration_weeks
+                      ? `${protocol.duration_weeks} semaine${protocol.duration_weeks > 1 ? "s" : ""} · `
+                      : ""}
+                    {new Intl.DateTimeFormat("fr-FR", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    }).format(new Date(protocol.created_at))}
+                  </p>
                 </div>
-              );
-            })}
+                <span
+                  className={`ml-4 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${statusClass[protocol.status]}`}
+                >
+                  {statusLabel[protocol.status]}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </div>
