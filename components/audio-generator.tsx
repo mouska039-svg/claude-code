@@ -31,14 +31,13 @@ export function AudioGenerator({ sessionId }: { sessionId: string }) {
       {audioUrl ? (
         <div className="space-y-3">
           <p className="text-sm text-sage font-medium">Audio généré avec succès</p>
-          <audio key={audioUrl} controls src={audioUrl} className="w-full" />
           <a
             href={audioUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-sm text-sage underline underline-offset-2"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 text-sage px-4 py-2.5 text-sm font-medium hover:bg-sage/20 transition-colors"
           >
-            Télécharger l&apos;audio (MP3)
+            Écouter / Télécharger l&apos;audio (MP3)
           </a>
           <button
             onClick={() => {
