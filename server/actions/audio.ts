@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { checkQuota, incrementQuota } from "@/lib/quotas";
 import { redirect } from "next/navigation";
 
@@ -60,9 +60,9 @@ export async function generateAudio(
   }
 
   const fileName = `${sessionId}/${Date.now()}.mp3`;
-  const serviceClient = await createServiceClient();
+  const adminClient = createAdminClient();
 
-  const { error: uploadError } = await serviceClient.storage
+  const { error: uploadError } = await adminClient.storage
     .from("session-audios")
     .upload(fileName, audioBuffer, { contentType: "audio/mpeg", upsert: false });
 
@@ -73,7 +73,7 @@ export async function generateAudio(
 
   const {
     data: { publicUrl },
-  } = serviceClient.storage.from("session-audios").getPublicUrl(fileName);
+  } = adminClient.storage.from("session-audios").getPublicUrl(fileName);
 
   const { data: audioRow, error: insertError } = await supabase
     .from("session_audios")
