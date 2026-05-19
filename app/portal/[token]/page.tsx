@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import { ProtocolCard } from "./protocol-card";
@@ -22,7 +22,7 @@ interface PortalError {
 }
 
 async function getPortalData(token: string): Promise<PortalSuccess | PortalError> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: shareToken } = await supabase
     .from("share_tokens")
