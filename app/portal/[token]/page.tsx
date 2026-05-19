@@ -52,7 +52,7 @@ async function getPortalData(token: string): Promise<PortalSuccess | PortalError
       .from("protocols")
       .select("*")
       .eq("client_id", clientId)
-      .eq("status", "active")
+      .in("status", ["active", "draft", "completed"])
       .order("created_at", { ascending: false }),
     supabase
       .from("sessions")
