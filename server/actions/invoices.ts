@@ -1,20 +1,11 @@
 "use server";
 
-import { z } from "zod";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/supabase";
 
 type InvoiceRow = Database["public"]["Tables"]["invoices"]["Row"];
 type InvoiceStatus = InvoiceRow["status"];
-
-const invoiceSchema = z.object({
-  amount: z.string().min(1, "Le montant est requis"),
-  vat: z.enum(["0", "10", "20"]),
-  description: z.string().min(1, "La description est requise"),
-  company_id: z.string().optional().or(z.literal("")),
-  client_id: z.string().optional().or(z.literal("")),
-});
 
 export async function createInvoice(formData: FormData): Promise<{ error?: string }> {
   const supabase = await createClient();
@@ -24,30 +15,40 @@ export async function createInvoice(formData: FormData): Promise<{ error?: strin
 
   if (!user) redirect("/sign-in");
 
-  const parsed = invoiceSchema.safeParse({
-    amount: formData.get("amount"),
-    vat: formData.get("vat"),
-    description: formData.get("description"),
-    company_id: formData.get("company_id"),
-    client_id: formData.get("client_id"),
-  });
+  const clientId = (formData.get("client_id") as string | null) || null;
+  const companyId = (formData.get("company_id") as string | null) || null;
+  const vatStr = formData.get("vat") as string | null;
+  const itemsJson = formData.get("items_json") as string | null;
 
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Données invalides" };
-  }
-
-  const companyId = parsed.data.company_id || null;
-  const clientId = parsed.data.client_id || null;
-
-  if (!companyId && !clientId) {
+  if (!clientId && !companyId) {
     return { error: "Veuillez sélectionner un client ou une entreprise" };
   }
 
+  const vatRate = parseInt(vatStr ?? "0", 10);
+
+  let items: {
+    description: string;
+    quantity: number;
+    unit_price: number;
+    total: number;
+  }[] = [];
+  try {
+    items = itemsJson ? JSON.parse(itemsJson) : [];
+  } catch {
+    return { error: "Données de prestations invalides" };
+  }
+
+  if (items.length === 0) {
+    return { error: "Ajoutez au moins une prestation" };
+  }
+
+  const amount = parseFloat(items.reduce((sum, it) => sum + it.total, 0).toFixed(2));
+
   const { error } = await supabase.from("invoices").insert({
     user_id: user.id,
-    amount: parseFloat(parsed.data.amount),
-    vat: parseInt(parsed.data.vat, 10),
-    items: [{ description: parsed.data.description }],
+    amount,
+    vat: vatRate,
+    items: items as unknown as import("@/types/supabase").Json,
     company_id: companyId,
     client_id: clientId,
     status: "draft",
@@ -57,7 +58,7 @@ export async function createInvoice(formData: FormData): Promise<{ error?: strin
     return { error: "Erreur lors de la création de la facture" };
   }
 
-  redirect("/dashboard/invoices");
+  return {};
 }
 
 export async function getInvoices(): Promise<InvoiceRow[]> {

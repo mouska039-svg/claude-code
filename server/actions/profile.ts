@@ -82,6 +82,15 @@ export async function updateProfile(
     rpps_or_adeli: (formData.get("rpps_or_adeli") as string | null) || null,
   };
 
+  const street = (formData.get("address_street") as string | null) || "";
+  const postal_code = (formData.get("address_postal_code") as string | null) || "";
+  const city = (formData.get("address_city") as string | null) || "";
+  const country = (formData.get("address_country") as string | null) || "";
+  const address_json =
+    street || postal_code || city || country
+      ? { street, postal_code, city, country }
+      : null;
+
   const parsed = profileSchema.safeParse(raw);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Données invalides" };
@@ -94,6 +103,7 @@ export async function updateProfile(
       specialty: parsed.data.specialty ?? null,
       siret: parsed.data.siret ?? null,
       rpps_or_adeli: parsed.data.rpps_or_adeli ?? null,
+      address_json,
       updated_at: new Date().toISOString(),
     })
     .eq("id", user.id);

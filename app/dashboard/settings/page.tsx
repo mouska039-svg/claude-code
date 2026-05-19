@@ -185,6 +185,94 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+          <div className="rounded-xl bg-card border border-border p-6 space-y-4">
+            <h2 className="text-base font-semibold text-foreground">
+              Adresse professionnelle
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Rue
+                </label>
+                <input
+                  name="address_street"
+                  defaultValue={
+                    (
+                      profile?.address_json as {
+                        street?: string;
+                        postal_code?: string;
+                        city?: string;
+                        country?: string;
+                      } | null
+                    )?.street ?? ""
+                  }
+                  placeholder="12 rue des Lilas"
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Code postal
+                </label>
+                <input
+                  name="address_postal_code"
+                  defaultValue={
+                    (
+                      profile?.address_json as {
+                        street?: string;
+                        postal_code?: string;
+                        city?: string;
+                        country?: string;
+                      } | null
+                    )?.postal_code ?? ""
+                  }
+                  maxLength={10}
+                  placeholder="75001"
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Ville
+                </label>
+                <input
+                  name="address_city"
+                  defaultValue={
+                    (
+                      profile?.address_json as {
+                        street?: string;
+                        postal_code?: string;
+                        city?: string;
+                        country?: string;
+                      } | null
+                    )?.city ?? ""
+                  }
+                  placeholder="Paris"
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Pays
+                </label>
+                <input
+                  name="address_country"
+                  defaultValue={
+                    (
+                      profile?.address_json as {
+                        street?: string;
+                        postal_code?: string;
+                        city?: string;
+                        country?: string;
+                      } | null
+                    )?.country ?? "France"
+                  }
+                  placeholder="France"
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage/50"
+                />
+              </div>
+            </div>
+          </div>
           <button
             type="submit"
             disabled={isPending}
