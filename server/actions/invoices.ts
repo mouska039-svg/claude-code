@@ -61,6 +61,64 @@ export async function createInvoice(formData: FormData): Promise<{ error?: strin
   return {};
 }
 
+export async function updateInvoice(
+  invoiceId: string,
+  formData: FormData
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in");
+
+  const clientId = (formData.get("client_id") as string | null) || null;
+  const companyId = (formData.get("company_id") as string | null) || null;
+  const vatStr = formData.get("vat") as string | null;
+  const itemsJson = formData.get("items_json") as string | null;
+
+  if (!clientId && !companyId) {
+    return { error: "Veuillez sélectionner un client ou une entreprise" };
+  }
+
+  const vatRate = parseInt(vatStr ?? "0", 10);
+
+  let items: {
+    description: string;
+    quantity: number;
+    unit_price: number;
+    total: number;
+  }[] = [];
+  try {
+    items = itemsJson ? JSON.parse(itemsJson) : [];
+  } catch {
+    return { error: "Données de prestations invalides" };
+  }
+
+  if (items.length === 0) {
+    return { error: "Ajoutez au moins une prestation" };
+  }
+
+  const amount = parseFloat(items.reduce((sum, it) => sum + it.total, 0).toFixed(2));
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({
+      amount,
+      vat: vatRate,
+      items: items as unknown as import("@/types/supabase").Json,
+      client_id: clientId,
+      company_id: companyId,
+    })
+    .eq("id", invoiceId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    return { error: "Erreur lors de la modification de la facture" };
+  }
+
+  return {};
+}
+
 export async function getInvoices(): Promise<InvoiceRow[]> {
   const supabase = await createClient();
   const {

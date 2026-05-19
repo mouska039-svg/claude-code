@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Printer } from "lucide-react";
+import { ChevronLeft, Printer, Pencil } from "lucide-react";
 import type { Database } from "@/types/supabase";
 import { InvoiceStatusActions } from "./invoice-status-actions";
 
@@ -126,6 +126,13 @@ export default async function InvoiceDetailPage({
           >
             {statusLabels[invoice.status]}
           </span>
+          <Link
+            href={`/dashboard/invoices/${invoice.id}/edit`}
+            className="inline-flex items-center gap-2 rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-muted transition-colors min-h-[44px]"
+          >
+            <Pencil size={15} />
+            Modifier
+          </Link>
           <Link
             href={`/invoice-print/${invoice.id}`}
             target="_blank"
