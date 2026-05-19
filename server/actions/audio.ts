@@ -48,7 +48,9 @@ export async function generateAudio(
     );
 
     if (!response.ok) {
-      return { error: "Erreur ElevenLabs lors de la génération audio" };
+      const errBody = await response.text().catch(() => "");
+      console.error("ElevenLabs error", response.status, errBody);
+      return { error: `Erreur ElevenLabs ${response.status}: ${errBody.slice(0, 200)}` };
     }
 
     const arrayBuffer = await response.arrayBuffer();
