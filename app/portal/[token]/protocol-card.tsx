@@ -7,10 +7,15 @@ import type { Json } from "@/types/supabase";
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
 type Specialty = Database["public"]["Tables"]["profiles"]["Row"]["specialty"];
 
+interface ProtocolStep {
+  week?: string;
+  recommendations?: string[];
+}
+
 interface ProtocolContent {
   summary?: string;
   disclaimer?: string;
-  steps?: string[];
+  steps?: string[] | ProtocolStep[];
   recommendations?: string[];
   duration_weeks?: number;
 }
@@ -20,6 +25,16 @@ function parseContent(output: Json): ProtocolContent {
     return output as ProtocolContent;
   }
   return {};
+}
+
+function flattenItems(content: ProtocolContent): string[] {
+  const raw = content.steps ?? content.recommendations ?? [];
+  if (raw.length === 0) return [];
+  // If steps are objects { week, recommendations }, flatten all recommendations
+  if (typeof raw[0] === "object" && raw[0] !== null && !Array.isArray(raw[0])) {
+    return (raw as ProtocolStep[]).flatMap((s) => s.recommendations ?? []);
+  }
+  return raw as string[];
 }
 
 function SpecialtyBadge({ specialty }: { specialty: Specialty }) {
@@ -63,7 +78,7 @@ export function ProtocolCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const content = parseContent(protocol.output);
-  const items = content.steps ?? content.recommendations ?? [];
+  const items = flattenItems(content);
   const visibleItems = expanded ? items : items.slice(0, 2);
   const hasMore = items.length > 2;
 
