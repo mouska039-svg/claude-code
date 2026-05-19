@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardSidebar } from "@/components/shared/dashboard-sidebar";
 import { DashboardHeader } from "@/components/shared/dashboard-header";
+import { MobileBottomNav } from "@/components/shared/mobile-bottom-nav";
 import type { Database } from "@/types/supabase";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -25,7 +26,7 @@ export default async function DashboardLayout({
   const profile = data as ProfileRow | null;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex min-h-dvh bg-background">
       <DashboardSidebar />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <DashboardHeader
@@ -36,10 +37,11 @@ export default async function DashboardLayout({
             avatar_url: profile?.avatar_url ?? null,
           }}
         />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">{children}</div>
         </main>
       </div>
+      <MobileBottomNav />
     </div>
   );
 }

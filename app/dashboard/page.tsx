@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Users, FileText, TrendingUp, Zap } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
@@ -148,7 +149,8 @@ export default async function DashboardPage() {
           return (
             <div
               key={stat.label}
-              className="rounded-xl bg-card border border-border p-5 hover:shadow-sm transition-shadow"
+              aria-label={`${stat.label}: ${stat.value}`}
+              className="rounded-xl bg-card border border-border p-5 hover:shadow-sm transition-shadow min-h-[100px]"
             >
               <div className="flex items-start justify-between mb-3">
                 <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
@@ -165,7 +167,7 @@ export default async function DashboardPage() {
                   <Icon className="h-3.5 w-3.5" />
                 </div>
               </div>
-              <p className="font-mono text-2xl font-semibold text-foreground">
+              <p className="font-mono text-2xl font-semibold text-foreground tabular-nums">
                 {stat.value}
               </p>
               <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
@@ -178,24 +180,24 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-sm font-semibold text-foreground mb-3">Actions rapides</h2>
         <div className="flex flex-wrap gap-3">
-          <a
+          <Link
             href="/dashboard/clients/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2 text-sm font-medium text-sage hover:bg-sage/15 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2.5 text-sm font-medium text-sage hover:bg-sage/15 transition-colors cursor-pointer min-h-[44px]"
           >
             + Nouveau client
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard/sessions/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2.5 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors cursor-pointer min-h-[44px]"
           >
             + Nouvelle séance
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard/companies/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-muted border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-muted border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors cursor-pointer min-h-[44px]"
           >
             + Programme entreprise
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -206,12 +208,12 @@ export default async function DashboardPage() {
           <div className="rounded-xl bg-card border border-border p-8 text-center">
             <CalendarIcon className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">Aucune séance à venir</p>
-            <a
+            <Link
               href="/dashboard/sessions/new"
-              className="inline-block mt-3 text-sm text-sage hover:underline"
+              className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-sage border border-sage/30 rounded-lg px-4 py-2.5 bg-sage/5 hover:bg-sage/10 transition-colors cursor-pointer min-h-[44px]"
             >
               Planifier une séance →
-            </a>
+            </Link>
           </div>
         ) : (
           <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">

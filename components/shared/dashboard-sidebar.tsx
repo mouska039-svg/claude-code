@@ -39,7 +39,10 @@ export function DashboardSidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
+      <nav
+        aria-label="Navigation principale"
+        className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto"
+      >
         {NAV_ITEMS.map((item) => {
           const isActive = item.exact
             ? pathname === item.href
@@ -49,10 +52,12 @@ export function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                "relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage/50",
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                  ? "bg-sage/15 text-sage font-semibold before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-0.5 before:bg-sage before:rounded-r"
                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               )}
             >
