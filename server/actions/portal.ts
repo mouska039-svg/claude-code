@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Database } from "@/types/supabase";
 
@@ -34,9 +34,10 @@ export async function generatePortalLink(
 
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
-  await supabase.from("share_tokens").delete().eq("resource_id", clientId);
+  const adminClient = createAdminClient();
+  await adminClient.from("share_tokens").delete().eq("resource_id", clientId);
 
-  const { error } = await supabase.from("share_tokens").insert({
+  const { error } = await adminClient.from("share_tokens").insert({
     token,
     resource_type: "client_portal",
     resource_id: clientId,
