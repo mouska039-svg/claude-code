@@ -156,14 +156,41 @@ export default function NewCompanyPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-lg bg-sage text-white px-5 py-2 text-sm font-medium hover:bg-sage/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-5 min-h-[44px] text-sm font-medium hover:bg-sage/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
           >
-            {isPending ? "Création…" : "Créer ll'entrepriseapos;entreprise"}
+            {isPending ? (
+              <>
+                <svg
+                  className="animate-spin h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+                Création en cours…
+              </>
+            ) : (
+              "Créer l’entreprise"
+            )}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-lg border border-input bg-card px-5 py-2 text-sm font-medium hover:bg-muted transition-colors"
+            className="inline-flex items-center rounded-lg border border-input bg-card px-5 min-h-[44px] text-sm font-medium hover:bg-muted transition-colors"
           >
             Annuler
           </button>
