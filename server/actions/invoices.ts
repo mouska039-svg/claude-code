@@ -47,9 +47,7 @@ export async function createInvoice(formData: FormData): Promise<{ error?: strin
     user_id: user.id,
     amount: parseFloat(parsed.data.amount),
     vat: parseInt(parsed.data.vat, 10),
-    items: [
-      { description: parsed.data.description },
-    ] as unknown as Database["public"]["Tables"]["invoices"]["Insert"]["items"],
+    items: [{ description: parsed.data.description }],
     company_id: companyId,
     client_id: clientId,
     status: "draft",
