@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Building2 } from "lucide-react";
 import type { Database } from "@/types/supabase";
 
 type CompanyRow = Database["public"]["Tables"]["companies"]["Row"];
@@ -47,6 +48,7 @@ export default async function CompaniesPage() {
 
   return (
     <div className="space-y-6">
+      {/* Page header */}
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="font-fraunces text-3xl font-semibold text-ink">Entreprises</h1>
@@ -56,25 +58,26 @@ export default async function CompaniesPage() {
         </div>
         <Link
           href="/dashboard/companies/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-4 py-2 text-sm font-medium hover:bg-sage/90 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-4 min-h-[44px] text-sm font-medium hover:bg-sage/90 transition-colors"
         >
           + Nouvelle entreprise
         </Link>
       </div>
 
+      {/* Empty state */}
       {companies.length === 0 ? (
-        <div className="rounded-xl bg-card border border-border p-12 text-center">
-          <p className="text-muted-foreground text-sm">
-            Aucune entreprise pour l&apos;instant.
-          </p>
+        <div className="rounded-xl bg-card border border-border p-12 text-center flex flex-col items-center gap-3">
+          <Building2 className="w-10 h-10 text-muted-foreground/50" />
+          <p className="text-muted-foreground text-sm font-medium">Aucune entreprise</p>
           <Link
             href="/dashboard/companies/new"
-            className="inline-block mt-3 text-sm text-sage hover:underline"
+            className="inline-flex items-center gap-1 rounded-lg bg-sage text-white px-4 min-h-[44px] text-sm font-medium hover:bg-sage/90 transition-colors"
           >
-            Ajouter votre première entreprise →
+            Ajouter une entreprise
           </Link>
         </div>
       ) : (
+        /* Company cards */
         <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
           {companies.map((company) => (
             <div
@@ -85,27 +88,27 @@ export default async function CompaniesPage() {
                 <p className="text-sm font-medium text-foreground truncate">
                   {company.name}
                 </p>
-                <div className="flex items-center gap-3 mt-0.5">
+                <div className="flex flex-wrap items-center gap-2 mt-0.5">
                   {company.contact_name && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                       {company.contact_name}
                     </p>
                   )}
                   {company.contact_email && (
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-sm text-muted-foreground truncate">
                       {company.contact_email}
                     </p>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-3 ml-4">
-                <span className="inline-flex items-center rounded-full bg-sage/10 text-sage px-2 py-0.5 text-xs font-medium">
+              <div className="flex items-center gap-3 ml-4 flex-shrink-0">
+                <span className="inline-flex items-center rounded-full bg-sage/10 text-sage px-2.5 py-0.5 text-xs font-medium">
                   {company.programsCount} programme
                   {company.programsCount !== 1 ? "s" : ""}
                 </span>
                 <Link
                   href={`/dashboard/companies/${company.id}`}
-                  className="text-sm text-sage hover:underline font-medium"
+                  className="inline-flex items-center rounded-lg border border-input bg-background px-3 min-h-[44px] text-sm font-medium hover:bg-muted transition-colors text-foreground"
                 >
                   Voir
                 </Link>

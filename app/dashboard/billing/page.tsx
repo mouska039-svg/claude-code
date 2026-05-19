@@ -14,6 +14,12 @@ const PLAN_LABELS: Record<string, string> = {
   cabinet_plus: "Cabinet + Entreprise",
 };
 
+const PLAN_PRICES: Record<string, number> = {
+  free: 0,
+  cabinet: 39,
+  cabinet_plus: 79,
+};
+
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   active: { label: "Actif", className: "bg-sage/10 text-sage" },
   trialing: { label: "Essai", className: "bg-blue-50 text-blue-700" },
@@ -67,6 +73,10 @@ export default async function BillingPage({
       }).format(new Date(subscription.current_period_end))
     : null;
 
+  const monthlyPrice = PLAN_PRICES[plan] ?? 0;
+  const annualPrice = monthlyPrice * 12 * 0.8;
+  const annualSavings = monthlyPrice * 12 - annualPrice;
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
@@ -89,142 +99,151 @@ export default async function BillingPage({
         </div>
       )}
 
-      {/* Current plan summary */}
-      <div className="rounded-xl bg-card border border-border p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-              Plan actuel
-            </p>
-            <div className="flex items-center gap-3">
-              <span className="font-fraunces text-2xl font-semibold text-foreground">
-                {PLAN_LABELS[plan] ?? plan}
-              </span>
-              {statusInfo && (
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.className}`}
-                >
-                  {statusInfo.label}
+      <div className="rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-sage/5 to-transparent">
+        <div className="p-6 sm:p-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+                Plan actuel
+              </p>
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="font-fraunces text-2xl font-semibold text-foreground">
+                  {PLAN_LABELS[plan] ?? plan}
                 </span>
+                {statusInfo && (
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.className}`}
+                  >
+                    {statusInfo.label}
+                  </span>
+                )}
+              </div>
+              {periodEnd && (
+                <p className="text-sm text-muted-foreground">
+                  {active ? "Renouvellement le" : "Accès jusqu'au"} {periodEnd}
+                </p>
+              )}
+              {plan === "free" && (
+                <p className="text-sm text-muted-foreground">
+                  Gratuit — limites appliquées
+                </p>
               )}
             </div>
-            {periodEnd && (
-              <p className="text-sm text-muted-foreground">
-                {active ? "Renouvellement le" : "Accès jusqu'au"} {periodEnd}
-              </p>
-            )}
-            {plan === "free" && (
-              <p className="text-sm text-muted-foreground">
-                Gratuit — limites appliquées
-              </p>
-            )}
+            {plan !== "free" && <PortalButton />}
           </div>
-          {plan !== "free" && <PortalButton />}
         </div>
       </div>
 
-      {/* Plan comparison */}
       <div>
         <h2 className="text-base font-semibold text-foreground mb-4">
           Comparer les plans
         </h2>
         <div className="rounded-xl border border-border overflow-hidden">
-          {/* Header */}
-          <div className="grid grid-cols-4 bg-muted/50">
-            <div className="p-4" />
-            {(["free", "cabinet", "cabinet_plus"] as const).map((p) => (
-              <div
-                key={p}
-                className={`p-4 text-center border-l border-border ${plan === p ? "bg-sage/5" : ""}`}
-              >
-                <p className="text-sm font-semibold text-foreground">{PLAN_LABELS[p]}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {p === "free"
-                    ? "Gratuit"
-                    : p === "cabinet"
-                      ? "39 € / mois"
-                      : "79 € / mois"}
-                </p>
-                {plan === p && (
-                  <span className="inline-block mt-1 text-xs bg-sage/10 text-sage rounded-full px-2 py-0.5">
-                    Plan actuel
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px] border-collapse">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-muted/50">
+                  <th className="p-4 text-left w-1/4" />
+                  {(["free", "cabinet", "cabinet_plus"] as const).map((p) => (
+                    <th
+                      key={p}
+                      className={`p-4 text-center border-l border-border ${plan === p ? "bg-sage/5" : ""}`}
+                    >
+                      <p className="text-sm font-semibold text-foreground">
+                        {PLAN_LABELS[p]}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {p === "free"
+                          ? "Gratuit"
+                          : p === "cabinet"
+                            ? "39 € / mois"
+                            : "79 € / mois"}
+                      </p>
+                      {plan === p && (
+                        <span className="inline-block mt-1 text-xs bg-sage/10 text-sage rounded-full px-2 py-0.5">
+                          Plan actuel
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {FEATURES.map((feature, idx) => (
+                  <tr
+                    key={feature.label}
+                    className={`border-t border-border ${idx % 2 === 0 ? "" : "bg-muted/20"}`}
+                  >
+                    <td className="p-3 px-4">
+                      <span className="text-sm text-foreground">{feature.label}</span>
+                    </td>
+                    <td
+                      className={`p-3 text-center border-l border-border ${plan === "free" ? "bg-sage/5" : ""}`}
+                    >
+                      <FeatureValue value={feature.free} />
+                    </td>
+                    <td
+                      className={`p-3 text-center border-l border-border ${plan === "cabinet" ? "bg-sage/5" : ""}`}
+                    >
+                      <FeatureValue value={feature.cabinet} />
+                    </td>
+                    <td
+                      className={`p-3 text-center border-l border-border ${plan === "cabinet_plus" ? "bg-sage/5" : ""}`}
+                    >
+                      <FeatureValue value={feature.plus} />
+                    </td>
+                  </tr>
+                ))}
 
-          {/* Features */}
-          {FEATURES.map((feature, idx) => (
-            <div
-              key={feature.label}
-              className={`grid grid-cols-4 border-t border-border ${idx % 2 === 0 ? "" : "bg-muted/20"}`}
-            >
-              <div className="p-3 px-4">
-                <span className="text-sm text-foreground">{feature.label}</span>
-              </div>
-              <div
-                className={`p-3 text-center border-l border-border ${plan === "free" ? "bg-sage/5" : ""}`}
-              >
-                <FeatureValue value={feature.free} />
-              </div>
-              <div
-                className={`p-3 text-center border-l border-border ${plan === "cabinet" ? "bg-sage/5" : ""}`}
-              >
-                <FeatureValue value={feature.cabinet} />
-              </div>
-              <div
-                className={`p-3 text-center border-l border-border ${plan === "cabinet_plus" ? "bg-sage/5" : ""}`}
-              >
-                <FeatureValue value={feature.plus} />
-              </div>
-            </div>
-          ))}
-
-          {/* CTA row */}
-          <div className="grid grid-cols-4 border-t border-border bg-muted/30">
-            <div className="p-4" />
-            {/* Découverte */}
-            <div className="p-4 border-l border-border flex items-center justify-center">
-              {plan === "free" ? (
-                <span className="text-xs text-sage font-medium">Plan actuel</span>
-              ) : (
-                <span className="text-xs text-muted-foreground">—</span>
-              )}
-            </div>
-            {/* Cabinet */}
-            <div className="p-4 border-l border-border flex items-center justify-center">
-              {plan === "cabinet" ? (
-                <span className="text-xs text-sage font-medium">Plan actuel</span>
-              ) : plan === "cabinet_plus" ? (
-                <span className="text-xs text-muted-foreground">
-                  Rétrograder via le portail
-                </span>
-              ) : (
-                <UpgradeButton plan="cabinet" label="Choisir Cabinet" />
-              )}
-            </div>
-            {/* Cabinet Plus */}
-            <div className="p-4 border-l border-border flex items-center justify-center">
-              {plan === "cabinet_plus" ? (
-                <span className="text-xs text-sage font-medium">Plan actuel</span>
-              ) : (
-                <UpgradeButton
-                  plan="cabinet_plus"
-                  label="Choisir Cabinet+"
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-terracotta text-white px-4 py-2 text-sm font-medium hover:bg-terracotta/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-                />
-              )}
-            </div>
+                <tr className="border-t border-border bg-muted/30">
+                  <td className="p-4" />
+                  <td className="p-4 border-l border-border text-center">
+                    {plan === "free" ? (
+                      <span className="text-xs text-sage font-medium">Plan actuel</span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
+                  </td>
+                  <td className="p-4 border-l border-border text-center">
+                    {plan === "cabinet" ? (
+                      <span className="text-xs text-sage font-medium">Plan actuel</span>
+                    ) : plan === "cabinet_plus" ? (
+                      <span className="text-xs text-muted-foreground">
+                        Rétrograder via le portail
+                      </span>
+                    ) : (
+                      <UpgradeButton plan="cabinet" label="Choisir Cabinet" />
+                    )}
+                  </td>
+                  <td className="p-4 border-l border-border text-center">
+                    {plan === "cabinet_plus" ? (
+                      <span className="text-xs text-sage font-medium">Plan actuel</span>
+                    ) : (
+                      <UpgradeButton
+                        plan="cabinet_plus"
+                        label="Choisir Cabinet+"
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-terracotta text-white px-4 py-2 text-sm font-medium hover:bg-terracotta/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                      />
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+
+        {monthlyPrice > 0 && (
+          <p className="mt-4 text-sm text-center text-sage font-medium">
+            Vous économisez{" "}
+            <span className="font-semibold">{annualSavings.toFixed(0)} €</span> par an
+            avec la facturation annuelle (−20%)
+          </p>
+        )}
       </div>
 
-      {/* Annual pricing note */}
       <p className="text-xs text-muted-foreground text-center">
-        Économisez 20 % avec la facturation annuelle — Cabinet : 374,40 € / an · Cabinet+
-        : 758,40 € / an. Configurez la facturation annuelle depuis le portail Stripe après
-        votre abonnement.
+        Tous les prix sont HT. TVA applicable selon votre situation. Sans engagement —
+        annulez à tout moment.
       </p>
     </div>
   );

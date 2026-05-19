@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Receipt } from "lucide-react";
 import type { Database } from "@/types/supabase";
 
 type InvoiceRow = Database["public"]["Tables"]["invoices"]["Row"];
@@ -15,11 +16,21 @@ const statusLabels: Record<InvoiceRow["status"], string> = {
 
 const statusColors: Record<InvoiceRow["status"], string> = {
   draft: "bg-muted text-muted-foreground",
-  sent: "bg-blue-100 text-blue-700",
+  sent: "bg-blue-50 text-blue-700",
   paid: "bg-sage/10 text-sage",
-  overdue: "bg-red-100 text-red-700",
-  cancelled: "bg-red-50 text-red-400",
+  overdue: "bg-red-50 text-red-700",
+  cancelled: "bg-red-50 text-red-700",
 };
+
+function formatEur(amount: number) {
+  return amount.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+}
+
+function getInvoiceNumber(invoice: InvoiceRow, index: number) {
+  const year = new Date(invoice.created_at).getFullYear();
+  const seq = String(index + 1).padStart(3, "0");
+  return `FAC-${year}-${seq}`;
+}
 
 export default async function InvoicesPage() {
   const supabase = await createClient();
@@ -57,46 +68,100 @@ export default async function InvoicesPage() {
     ])
   );
 
+  // Current month for summary
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  const thisMonthInvoices = invoices.filter((inv) => inv.created_at >= monthStart);
+
+  const totalThisMonth = thisMonthInvoices.reduce(
+    (sum, inv) => sum + inv.amount * (1 + inv.vat / 100),
+    0
+  );
+  const totalPending = invoices
+    .filter((inv) => inv.status === "sent")
+    .reduce((sum, inv) => sum + inv.amount * (1 + inv.vat / 100), 0);
+  const totalPaid = invoices
+    .filter((inv) => inv.status === "paid")
+    .reduce((sum, inv) => sum + inv.amount * (1 + inv.vat / 100), 0);
+
+  const today = new Date().toISOString().slice(0, 10);
+
   return (
     <div className="space-y-6">
+      {/* Page header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="font-fraunces text-3xl font-semibold text-ink">Factures</h1>
+          <h1 className="font-fraunces text-3xl font-semibold text-ink">Facturation</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {invoices.length} facture{invoices.length !== 1 ? "s" : ""}
           </p>
         </div>
         <Link
           href="/dashboard/invoices/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-4 py-2 text-sm font-medium hover:bg-sage/90 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-sage text-white px-4 min-h-[44px] text-sm font-medium hover:bg-sage/90 transition-colors"
         >
           + Nouvelle facture
         </Link>
       </div>
 
-      {invoices.length === 0 ? (
-        <div className="rounded-xl bg-card border border-border p-12 text-center">
-          <p className="text-muted-foreground text-sm">
-            Aucune facture pour l&apos;instant.
+      {/* Summary strip */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="rounded-xl bg-card border border-border px-4 py-3">
+          <p className="text-xs text-muted-foreground">Total facturé ce mois</p>
+          <p className="font-mono text-base font-semibold text-foreground mt-1 tabular-nums">
+            {formatEur(totalThisMonth)}
           </p>
+        </div>
+        <div className="rounded-xl bg-card border border-border px-4 py-3">
+          <p className="text-xs text-muted-foreground">En attente</p>
+          <p className="font-mono text-base font-semibold text-blue-700 mt-1 tabular-nums">
+            {formatEur(totalPending)}
+          </p>
+        </div>
+        <div className="rounded-xl bg-card border border-border px-4 py-3">
+          <p className="text-xs text-muted-foreground">Payé</p>
+          <p className="font-mono text-base font-semibold text-sage mt-1 tabular-nums">
+            {formatEur(totalPaid)}
+          </p>
+        </div>
+      </div>
+
+      {/* Invoice list */}
+      {invoices.length === 0 ? (
+        <div className="rounded-xl bg-card border border-border p-12 text-center flex flex-col items-center gap-3">
+          <Receipt className="w-10 h-10 text-muted-foreground/50" />
+          <p className="text-muted-foreground text-sm font-medium">Aucune facture</p>
           <Link
             href="/dashboard/invoices/new"
-            className="inline-block mt-3 text-sm text-sage hover:underline"
+            className="inline-flex items-center gap-1 rounded-lg bg-sage text-white px-4 min-h-[44px] text-sm font-medium hover:bg-sage/90 transition-colors"
           >
-            Créer votre première facture →
+            Créer une facture
           </Link>
         </div>
       ) : (
         <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
-          {invoices.map((invoice) => {
+          {invoices.map((invoice, index) => {
             const recipientName = invoice.company_id
               ? companyMap.get(invoice.company_id)
               : invoice.client_id
                 ? clientMap.get(invoice.client_id)
                 : null;
 
-            const vatMultiplier = 1 + invoice.vat / 100;
-            const amountTtc = invoice.amount * vatMultiplier;
+            const amountTtc = invoice.amount * (1 + invoice.vat / 100);
+
+            // Determine if overdue: has a due date, not paid/cancelled, past today
+            // We use created_at + 30 days as a proxy for due date since there's no due_date field
+            const createdAt = new Date(invoice.created_at);
+            const dueDate = new Date(createdAt);
+            dueDate.setDate(dueDate.getDate() + 30);
+            const dueDateStr = dueDate.toISOString().slice(0, 10);
+            const isPastDue =
+              dueDateStr < today &&
+              invoice.status !== "paid" &&
+              invoice.status !== "cancelled";
+
+            const invoiceNumber = getInvoiceNumber(invoice, invoices.length - 1 - index);
 
             return (
               <div
@@ -104,26 +169,21 @@ export default async function InvoicesPage() {
                 className="flex items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-foreground font-mono">
-                    {invoice.id.slice(0, 8).toUpperCase()}
+                  <p className="font-mono text-sm font-medium text-foreground">
+                    {invoiceNumber}
                   </p>
-                  <div className="flex items-center gap-3 mt-0.5">
+                  <div className="flex flex-wrap items-center gap-2 mt-0.5">
                     {recipientName && (
-                      <p className="text-xs text-muted-foreground truncate">
-                        {recipientName}
+                      <p className="text-sm text-foreground truncate">{recipientName}</p>
+                    )}
+                    {invoice.status !== "paid" && (
+                      <p
+                        className={`text-xs ${isPastDue ? "text-red-600 font-medium" : "text-muted-foreground"}`}
+                      >
+                        Échéance {dueDate.toLocaleDateString("fr-FR")}
+                        {isPastDue ? " — en retard" : ""}
                       </p>
                     )}
-                    <p className="text-xs text-muted-foreground">
-                      {amountTtc.toLocaleString("fr-FR", {
-                        style: "currency",
-                        currency: "EUR",
-                      })}
-                      {invoice.vat > 0 && (
-                        <span className="ml-1 text-muted-foreground/70">
-                          TVA {invoice.vat}%
-                        </span>
-                      )}
-                    </p>
                     {invoice.paid_at && (
                       <p className="text-xs text-muted-foreground">
                         Payée le {new Date(invoice.paid_at).toLocaleDateString("fr-FR")}
@@ -131,9 +191,12 @@ export default async function InvoicesPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3 ml-4">
+                <div className="flex items-center gap-3 ml-4 flex-shrink-0">
+                  <p className="font-mono text-sm font-medium tabular-nums text-foreground">
+                    {formatEur(amountTtc)}
+                  </p>
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[invoice.status]}`}
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[invoice.status]}`}
                   >
                     {statusLabels[invoice.status]}
                   </span>
