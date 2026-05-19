@@ -34,7 +34,7 @@ export type CompanyProgramStatus =
 // ----------------------------------------------------------------
 // Quota types
 // ----------------------------------------------------------------
-export type QuotaType = "protocols" | "audios" | "company_programs";
+export type QuotaType = "protocols" | "audios" | "company_programs" | "clients";
 
 export type QuotaResult = {
   allowed: boolean;

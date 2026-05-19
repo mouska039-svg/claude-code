@@ -177,11 +177,11 @@ export function SignUpForm() {
 
       <p className="text-center text-xs text-mist">
         En créant un compte, vous acceptez nos{" "}
-        <Link href="/legal/terms" className="text-sage hover:underline">
+        <Link href="/cgv" className="text-sage hover:underline">
           CGU
         </Link>{" "}
         et notre{" "}
-        <Link href="/legal/privacy" className="text-sage hover:underline">
+        <Link href="/politique-de-confidentialite" className="text-sage hover:underline">
           politique de confidentialité
         </Link>
       </p>

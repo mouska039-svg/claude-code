@@ -24,6 +24,15 @@ export async function createCompany(formData: FormData): Promise<{ error?: strin
 
   if (!user) redirect("/sign-in");
 
+  const { checkQuota } = await import("@/lib/quotas");
+  const quota = await checkQuota(user.id, "company_programs");
+  if (!quota.allowed) {
+    return {
+      error:
+        "La gestion des entreprises est réservée au plan Cabinet+ Entreprise. Passez à un plan supérieur.",
+    };
+  }
+
   const parsed = companySchema.safeParse({
     name: formData.get("name"),
     contact_name: formData.get("contact_name"),

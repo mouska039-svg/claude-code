@@ -23,6 +23,14 @@ export async function createClient(formData: FormData): Promise<{ error?: string
 
   if (!user) redirect("/sign-in");
 
+  const { checkQuota } = await import("@/lib/quotas");
+  const quota = await checkQuota(user.id, "clients");
+  if (!quota.allowed) {
+    return {
+      error: `Limite de clients atteinte pour votre plan (${quota.limit} clients max). Passez à un plan supérieur.`,
+    };
+  }
+
   const parsed = clientSchema.safeParse({
     full_name: formData.get("full_name"),
     email: formData.get("email"),

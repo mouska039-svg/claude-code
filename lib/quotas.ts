@@ -6,9 +6,9 @@ type SubscriptionRow = Database["public"]["Tables"]["subscriptions"]["Row"];
 type UsageQuotaRow = Database["public"]["Tables"]["usage_quotas"]["Row"];
 
 const PLAN_LIMITS: Record<PlanType, Record<QuotaType, number | null>> = {
-  free: { protocols: 3, audios: 2, company_programs: 0 },
-  cabinet: { protocols: 30, audios: 20, company_programs: 0 },
-  cabinet_plus: { protocols: null, audios: null, company_programs: null },
+  free: { protocols: 3, audios: 2, company_programs: 0, clients: 3 },
+  cabinet: { protocols: 30, audios: 20, company_programs: 0, clients: 30 },
+  cabinet_plus: { protocols: null, audios: null, company_programs: null, clients: null },
 };
 
 export async function checkQuota(userId: string, type: QuotaType): Promise<QuotaResult> {
@@ -43,6 +43,16 @@ export async function checkQuota(userId: string, type: QuotaType): Promise<Quota
     .maybeSingle();
 
   const quota = quotaData as UsageQuotaRow | null;
+
+  if (type === "clients") {
+    const { count } = await supabase
+      .from("clients")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .then((r) => ({ count: r.count ?? 0 }));
+    const remaining = Math.max(0, limit - count);
+    return { allowed: remaining > 0, remaining, limit, plan };
+  }
 
   const countField =
     type === "protocols"
