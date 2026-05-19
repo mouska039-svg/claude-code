@@ -2,11 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
-import { AudioGenerator } from "@/components/audio-generator";
 
 type SessionRow = Database["public"]["Tables"]["sessions"]["Row"];
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
-type SessionAudioRow = Database["public"]["Tables"]["session_audios"]["Row"];
 
 const typeLabel: Record<SessionRow["type"], string> = {
   presentiel: "Présentiel",
@@ -37,17 +35,13 @@ export default async function SessionDetailPage({
 
   const session = sessionData as SessionRow;
 
-  const [clientResult, audiosResult] = await Promise.all([
-    supabase.from("clients").select("*").eq("id", session.client_id).maybeSingle(),
-    supabase
-      .from("session_audios")
-      .select("*")
-      .eq("session_id", id)
-      .order("created_at", { ascending: false }),
-  ]);
+  const { data: clientData } = await supabase
+    .from("clients")
+    .select("*")
+    .eq("id", session.client_id)
+    .maybeSingle();
 
-  const client = clientResult.data as ClientRow | null;
-  const audios = (audiosResult.data ?? []) as SessionAudioRow[];
+  const client = clientData as ClientRow | null;
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
@@ -126,33 +120,6 @@ export default async function SessionDetailPage({
             </div>
           )}
         </dl>
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-base font-semibold text-foreground">
-          Audios ({audios.length})
-        </h2>
-
-        {audios.length > 0 && (
-          <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
-            {audios.map((audio) => (
-              <div key={audio.id} className="px-5 py-4 space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-foreground">{audio.title}</p>
-                  <span className="text-xs text-muted-foreground shrink-0">
-                    {new Intl.DateTimeFormat("fr-FR", {
-                      day: "numeric",
-                      month: "short",
-                    }).format(new Date(audio.created_at))}
-                  </span>
-                </div>
-                <audio controls src={audio.audio_url} className="w-full h-9" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <AudioGenerator sessionId={id} />
       </div>
     </div>
   );
