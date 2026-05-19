@@ -66,7 +66,8 @@ export async function generateAudio(
     .upload(fileName, audioBuffer, { contentType: "audio/mpeg", upsert: false });
 
   if (uploadError) {
-    return { error: "Erreur lors de l'enregistrement de l'audio" };
+    console.error("Supabase upload error:", uploadError);
+    return { error: `Erreur upload: ${uploadError.message}` };
   }
 
   const {
