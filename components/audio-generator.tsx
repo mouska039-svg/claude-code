@@ -32,6 +32,14 @@ export function AudioGenerator({ sessionId }: { sessionId: string }) {
         <div className="space-y-3">
           <p className="text-sm text-sage font-medium">Audio généré avec succès</p>
           <audio controls src={audioUrl} className="w-full" />
+          <a
+            href={audioUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-sm text-sage underline underline-offset-2"
+          >
+            Télécharger l&apos;audio (MP3)
+          </a>
           <button
             onClick={() => {
               setAudioUrl(null);
