@@ -21,7 +21,7 @@ export async function generateAudio(
     return { error: "Quota audio dépassé pour ce mois. Passez à un plan supérieur." };
   }
 
-  const voiceId = process.env.ELEVENLABS_VOICE_ID;
+  const voiceId = process.env.ELEVENLABS_DEFAULT_VOICE_ID;
   const apiKey = process.env.ELEVENLABS_API_KEY;
 
   if (!voiceId || !apiKey) {
