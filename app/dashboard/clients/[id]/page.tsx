@@ -5,6 +5,7 @@ import { ChevronLeft, FileText, Sparkles, Calendar } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 import { ClientPortalButton } from "@/components/client-portal-button";
+import { OnboardingQrButton } from "./onboarding-qr-button";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -159,6 +160,7 @@ export default async function ClientDetailPage({
           séances.
         </p>
         <ClientPortalButton clientId={id} />
+        <OnboardingQrButton clientId={id} clientName={client.full_name} />
       </div>
 
       {/* Client info card */}

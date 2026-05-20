@@ -2,6 +2,8 @@ import { createAdminClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import { ProtocolCard } from "./protocol-card";
+import { JourneyProgress } from "@/components/portal/journey-progress";
+import { PushPermission } from "@/components/portal/push-permission";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -199,6 +201,12 @@ export default async function PortalTokenPage({
             <p className="text-sm text-muted-foreground">Suivi par {practitionerName}</p>
           </div>
         </header>
+
+        {/* Journey progress */}
+        <JourneyProgress clientId={client.id} />
+
+        {/* Push notifications */}
+        <PushPermission clientId={client.id} />
 
         {/* Protocols section */}
         <section className="space-y-4">

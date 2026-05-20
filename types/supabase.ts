@@ -733,6 +733,118 @@ export interface Database {
         };
         Relationships: [];
       };
+
+      push_subscriptions: {
+        Row: {
+          id: string;
+          client_id: string;
+          endpoint: string;
+          keys_p256dh: string;
+          keys_auth: string;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          endpoint: string;
+          keys_p256dh: string;
+          keys_auth: string;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          endpoint?: string;
+          keys_p256dh?: string;
+          keys_auth?: string;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      client_points: {
+        Row: {
+          id: string;
+          client_id: string;
+          total_points: number;
+          level: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          total_points?: number;
+          level?: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          total_points?: number;
+          level?: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      client_point_events: {
+        Row: {
+          id: string;
+          client_id: string;
+          event_type: string;
+          points: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          event_type: string;
+          points: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          event_type?: string;
+          points?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      onboarding_sessions: {
+        Row: {
+          id: string;
+          client_id: string;
+          token: string;
+          step: number;
+          completed: boolean;
+          created_at: string;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          token?: string;
+          step?: number;
+          completed?: boolean;
+          created_at?: string;
+          expires_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          token?: string;
+          step?: number;
+          completed?: boolean;
+          created_at?: string;
+          expires_at?: string;
+        };
+        Relationships: [];
+      };
     };
 
     Views: {
