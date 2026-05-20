@@ -13,6 +13,7 @@ import {
   CreditCard,
   Settings,
   LayoutTemplate,
+  Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { label: "Boutique", href: "/dashboard/shop", icon: ShoppingBag },
   { label: "Entreprises", href: "/dashboard/companies", icon: Building2 },
   { label: "Factures clients", href: "/dashboard/invoices", icon: Receipt },
+  { label: "Ambassadrice", href: "/dashboard/ambassador", icon: Heart },
   { label: "Abonnement", href: "/dashboard/billing", icon: CreditCard },
   { label: "Paramètres", href: "/dashboard/settings", icon: Settings },
 ];
