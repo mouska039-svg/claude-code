@@ -3,6 +3,7 @@ import { useState, useTransition } from "react";
 import { updateProfile, changePassword, deleteAccount } from "@/server/actions/profile";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect } from "react";
+import Link from "next/link";
 import type { Database } from "@/types/supabase";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -102,6 +103,27 @@ export default function SettingsPage() {
           Gérez votre profil et vos préférences
         </p>
       </div>
+
+      {/* Import shortcut */}
+      <Link
+        href="/dashboard/settings/import"
+        className="flex items-center justify-between rounded-xl bg-card border border-border px-5 py-4 hover:bg-muted/30 transition-colors group"
+      >
+        <div>
+          <p className="text-sm font-semibold text-ink">
+            Importer depuis un autre logiciel
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Itiaki, Jupi&apos;Terre, Maddie ou CSV générique
+          </p>
+        </div>
+        <span
+          className="text-muted-foreground group-hover:text-foreground transition-colors text-lg"
+          aria-hidden="true"
+        >
+          →
+        </span>
+      </Link>
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border">
