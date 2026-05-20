@@ -6,9 +6,21 @@ type SubscriptionRow = Database["public"]["Tables"]["subscriptions"]["Row"];
 type UsageQuotaRow = Database["public"]["Tables"]["usage_quotas"]["Row"];
 
 const PLAN_LIMITS: Record<PlanType, Record<QuotaType, number | null>> = {
-  free: { protocols: 3, audios: 2, company_programs: 0, clients: 3 },
-  cabinet: { protocols: 30, audios: 20, company_programs: 0, clients: 30 },
-  cabinet_plus: { protocols: null, audios: null, company_programs: null, clients: null },
+  free: { protocols: 3, audios: 2, company_programs: 0, clients: 3, summaries: 50 },
+  cabinet: {
+    protocols: 30,
+    audios: 20,
+    company_programs: 0,
+    clients: 30,
+    summaries: 500,
+  },
+  cabinet_plus: {
+    protocols: null,
+    audios: null,
+    company_programs: null,
+    clients: null,
+    summaries: null,
+  },
 };
 
 export async function checkQuota(userId: string, type: QuotaType): Promise<QuotaResult> {
@@ -59,7 +71,9 @@ export async function checkQuota(userId: string, type: QuotaType): Promise<Quota
       ? "protocols_count"
       : type === "audios"
         ? "audios_count"
-        : "company_programs_count";
+        : type === "summaries"
+          ? "summaries_count"
+          : "company_programs_count";
 
   const used = quota?.[countField] ?? 0;
   const remaining = Math.max(0, limit - (used as number));
@@ -102,9 +116,11 @@ export async function incrementQuota(userId: string, type: QuotaType): Promise<v
       protocols_count?: number;
       audios_count?: number;
       company_programs_count?: number;
+      summaries_count?: number;
     } = {};
     if (type === "protocols") updateData.protocols_count = currentVal + 1;
     else if (type === "audios") updateData.audios_count = currentVal + 1;
+    else if (type === "summaries") updateData.summaries_count = currentVal + 1;
     else updateData.company_programs_count = currentVal + 1;
 
     await supabase
@@ -119,9 +135,11 @@ export async function incrementQuota(userId: string, type: QuotaType): Promise<v
       protocols_count?: number;
       audios_count?: number;
       company_programs_count?: number;
+      summaries_count?: number;
     } = { user_id: userId, year_month: yearMonth };
     if (type === "protocols") insertData.protocols_count = 1;
     else if (type === "audios") insertData.audios_count = 1;
+    else if (type === "summaries") insertData.summaries_count = 1;
     else insertData.company_programs_count = 1;
 
     await supabase.from("usage_quotas").insert(insertData);

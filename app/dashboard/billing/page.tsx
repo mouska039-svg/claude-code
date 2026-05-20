@@ -30,13 +30,13 @@ const STATUS_LABELS: Record<string, { label: string; className: string }> = {
 
 const FEATURES = [
   { label: "Clients", free: "3 clients", cabinet: "30 clients", plus: "Illimité" },
-  { label: "Protocoles IA / mois", free: "3", cabinet: "30", plus: "Illimité" },
+  { label: "Protocoles / mois", free: "3", cabinet: "30", plus: "Illimité" },
   { label: "Séances & agenda", free: true, cabinet: true, plus: true },
   { label: "Devis & factures PDF", free: true, cabinet: true, plus: true },
   { label: "Tunnel client sécurisé", free: false, cabinet: true, plus: true },
   { label: "Signature électronique", free: false, cabinet: true, plus: true },
   { label: "Programme entreprise", free: false, cabinet: false, plus: true },
-  { label: "Clonage vocal IA", free: false, cabinet: false, plus: true },
+  { label: "Clone vocal", free: false, cabinet: false, plus: true },
   { label: "Accès multi-praticiens", free: false, cabinet: false, plus: true },
   { label: "Support prioritaire", free: false, cabinet: false, plus: true },
 ];

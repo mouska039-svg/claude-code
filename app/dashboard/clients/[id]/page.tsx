@@ -5,6 +5,7 @@ import { ChevronLeft, FileText, Sparkles, Calendar } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 import { ClientPortalButton } from "@/components/client-portal-button";
+import { OnboardingQrButton } from "./onboarding-qr-button";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -159,6 +160,7 @@ export default async function ClientDetailPage({
           séances.
         </p>
         <ClientPortalButton clientId={id} />
+        <OnboardingQrButton clientId={id} clientName={client.full_name} />
       </div>
 
       {/* Client info card */}
@@ -214,7 +216,7 @@ export default async function ClientDetailPage({
             <div>
               <p className="font-medium text-foreground">Aucun protocole</p>
               <p className="text-muted-foreground text-sm mt-1">
-                Générez un protocole personnalisé grâce à l&apos;IA
+                Générez un protocole personnalisé avec Naya
               </p>
             </div>
             <Link
@@ -222,7 +224,7 @@ export default async function ClientDetailPage({
               className="inline-flex items-center gap-2 min-h-[44px] rounded-lg bg-terracotta text-white px-5 py-2.5 text-sm font-medium hover:bg-terracotta/90 transition-colors"
             >
               <Sparkles size={14} aria-hidden="true" />
-              Générer un protocole IA
+              Générer avec Naya
             </Link>
           </div>
         ) : (

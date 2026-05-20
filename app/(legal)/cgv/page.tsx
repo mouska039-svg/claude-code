@@ -42,14 +42,14 @@ export default function CGVPage() {
                 <td className="p-3 border border-border font-medium">Découverte</td>
                 <td className="p-3 border border-border">Gratuit</td>
                 <td className="p-3 border border-border">
-                  3 protocoles IA/mois, fonctionnalités de base
+                  3 protocoles/mois, fonctionnalités de base
                 </td>
               </tr>
               <tr className="bg-muted/30">
                 <td className="p-3 border border-border font-medium">Cabinet</td>
                 <td className="p-3 border border-border">39 € HT/mois</td>
                 <td className="p-3 border border-border">
-                  30 protocoles IA/mois, facturation, clients illimités
+                  30 protocoles/mois, facturation, clients illimités
                 </td>
               </tr>
               <tr>
@@ -135,8 +135,8 @@ export default function CGVPage() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-ink mb-3">8. Responsabilité</h2>
         <p className="text-foreground leading-relaxed">
-          Naya est une plateforme de gestion administrative. Les protocoles générés par IA
-          sont fournis à titre indicatif et ne remplacent pas le jugement clinique du
+          Naya est une plateforme de gestion administrative. Les protocoles générés par
+          Naya sont fournis à titre indicatif et ne remplacent pas le jugement clinique du
           praticien. Naya ne saurait être tenu responsable de décisions prises sur la base
           de ces recommandations. La responsabilité de Naya est limitée au montant des
           sommes effectivement payées au cours des 3 derniers mois.

@@ -12,7 +12,7 @@ const PLANS = [
     description: "Pour découvrir Naya et commencer à structurer votre activité.",
     features: [
       "5 clients maximum",
-      "3 protocoles IA / mois",
+      "3 protocoles / mois",
       "2 audios générés / mois",
       "Portail client de base",
       "Anamnèse digitalisée",
@@ -32,7 +32,7 @@ const PLANS = [
     description: "Pour les praticiens qui veulent développer leur cabinet en solo.",
     features: [
       "Clients illimités",
-      "30 protocoles IA / mois",
+      "30 protocoles / mois",
       "20 audios générés / mois",
       "Portail client complet avec PWA",
       "Branding personnalisé",
@@ -57,7 +57,7 @@ const PLANS = [
       "Module entreprises QVCT",
       "Protocoles & audios illimités",
       "Clone vocal ElevenLabs",
-      "Propositions commerciales IA",
+      "Propositions commerciales assistées",
       "Facturation multi-échéances",
       "Compte-rendu DRH automatisé",
       "Support dédié",

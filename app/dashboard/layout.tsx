@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { DashboardSidebar } from "@/components/shared/dashboard-sidebar";
 import { DashboardHeader } from "@/components/shared/dashboard-header";
 import { MobileBottomNav } from "@/components/shared/mobile-bottom-nav";
+import { NpsWidget } from "@/components/nps-widget";
+import { getNpsStatus } from "@/server/actions/nps";
 import type { Database } from "@/types/supabase";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -21,9 +23,12 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  const [profileResult, npsStatus] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", user.id).single(),
+    getNpsStatus(),
+  ]);
 
-  const profile = data as ProfileRow | null;
+  const profile = profileResult.data as ProfileRow | null;
 
   return (
     <div className="flex min-h-dvh bg-background">
@@ -42,6 +47,7 @@ export default async function DashboardLayout({
         </main>
       </div>
       <MobileBottomNav />
+      <NpsWidget initialStatus={npsStatus} />
     </div>
   );
 }

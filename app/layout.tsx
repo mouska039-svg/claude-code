@@ -20,16 +20,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Naya — Le guide digital des praticiens du bien-être",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://naya.app"),
+  title: {
+    default: "Naya — Logiciel pour naturopathes, sophrologues et hypnothérapeutes",
+    template: "%s | Naya",
+  },
   description:
-    "Structurez vos cures, prolongez l'effet de vos séances, développez votre activité.",
-  keywords: ["bien-être", "naturopathe", "sophrologue", "hypnothérapeute", "protocoles"],
+    "Naya centralise vos clients, protocoles et séances. Le logiciel de gestion pensé pour les praticiens du bien-être : naturopathes, sophrologues, hypnothérapeutes.",
+  keywords: [
+    "naturopathe logiciel",
+    "sophrologue gestion cabinet",
+    "hypnothérapeute suivi clients",
+    "protocole bien-être",
+    "logiciel praticien naturopathie",
+  ],
   openGraph: {
-    title: "Naya — Le guide digital des praticiens du bien-être",
+    title: "Naya — Logiciel pour praticiens du bien-être",
     description:
-      "Structurez vos cures, prolongez l'effet de vos séances, développez votre activité.",
+      "Centralisez vos clients, créez vos protocoles et développez votre cabinet.",
     type: "website",
     locale: "fr_FR",
+    siteName: "Naya",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Naya — Logiciel pour praticiens du bien-être",
+    description:
+      "Centralisez vos clients, créez vos protocoles et développez votre cabinet.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   icons: {
     icon: "/logo-naya-mark.svg",

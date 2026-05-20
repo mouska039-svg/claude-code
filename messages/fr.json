@@ -23,8 +23,8 @@
     "title": "Tout ce dont vous avez besoin",
     "subtitle": "Une plateforme pensée pour les praticiens du bien-être.",
     "ai": {
-      "title": "Cures structurées par IA",
-      "description": "Générez des protocoles personnalisés en quelques secondes à partir de l'anamnèse de votre client. Naturopathie, sophrologie, hypnothérapie — chaque spécialité a son propre modèle."
+      "title": "Protocoles guidés par Naya",
+      "description": "Naya structure des protocoles personnalisés à partir de l'anamnèse de votre client. Naturopathie, sophrologie, hypnothérapie — chaque spécialité a son guide dédié."
     },
     "portal": {
       "title": "Portail client mobile engagé",
@@ -50,7 +50,7 @@
         "description": "Pour découvrir Naya et commencer à structurer votre activité.",
         "features": [
           "5 clients maximum",
-          "3 protocoles IA / mois",
+          "3 protocoles / mois",
           "2 audios générés / mois",
           "Portail client de base",
           "Anamnèse digitalisée",
@@ -64,7 +64,7 @@
         "description": "Pour les praticiens qui veulent développer leur cabinet en solo.",
         "features": [
           "Clients illimités",
-          "30 protocoles IA / mois",
+          "30 protocoles / mois",
           "20 audios générés / mois",
           "Portail client complet avec PWA",
           "Branding personnalisé",
@@ -84,7 +84,7 @@
           "Protocoles illimités",
           "Audios illimités",
           "Clone vocal ElevenLabs",
-          "Propositions commerciales IA",
+          "Propositions commerciales assistées",
           "Facturation multi-échéances",
           "Compte-rendu DRH automatisé",
           "Support dédié"
@@ -104,7 +104,7 @@
       {
         "name": "Marc T.",
         "role": "Sophrologue, Paris",
-        "content": "Le module entreprises m'a permis de décrocher mon premier contrat QVCT avec une PME de 200 personnes. La proposition commerciale générée par l'IA était bluffante."
+        "content": "Le module entreprises m'a permis de décrocher mon premier contrat QVCT avec une PME de 200 personnes. La proposition commerciale créée avec Naya était bluffante et très professionnelle."
       },
       {
         "name": "Isabelle R.",
@@ -121,8 +121,8 @@
         "answer": "Oui, entièrement. Les données sont hébergées en Europe (Supabase EU). Les anamnèses et données de santé sont chiffrées au repos. Un modèle de consentement RGPD est intégré avec signature électronique. Vous gardez le contrôle total de vos données."
       },
       {
-        "question": "L'IA pose-t-elle des diagnostics médicaux ?",
-        "answer": "Non, jamais. Naya est un outil d'aide à la structuration des cures, pas un outil médical. Tous les protocoles générés contiennent un disclaimer clair : « Ces recommandations relèvent du conseil en hygiène de vie et ne se substituent pas à un avis médical. »"
+        "question": "Naya pose-t-il des diagnostics médicaux ?",
+        "answer": "Non, jamais. Naya est un guide d'aide à la structuration des cures, pas un outil médical. Tous les protocoles contiennent un disclaimer clair : « Ces recommandations relèvent du conseil en hygiène de vie et ne se substituent pas à un avis médical. »"
       },
       {
         "question": "Puis-je utiliser mon propre branding ?",

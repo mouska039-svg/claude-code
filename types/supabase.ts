@@ -106,6 +106,7 @@ export interface Database {
           protocols_count: number;
           audios_count: number;
           company_programs_count: number;
+          summaries_count: number;
           created_at: string;
         };
         Insert: {
@@ -115,6 +116,7 @@ export interface Database {
           protocols_count?: number;
           audios_count?: number;
           company_programs_count?: number;
+          summaries_count?: number | null;
           created_at?: string;
         };
         Update: {
@@ -124,6 +126,7 @@ export interface Database {
           protocols_count?: number;
           audios_count?: number;
           company_programs_count?: number;
+          summaries_count?: number | null;
           created_at?: string;
         };
         Relationships: [];
@@ -699,6 +702,333 @@ export interface Database {
           cost_eur?: number;
           feature?: string;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      protocol_cache: {
+        Row: {
+          id: string;
+          cache_key: string;
+          protocol_output: Json;
+          created_at: string;
+          expires_at: string;
+          hit_count: number;
+        };
+        Insert: {
+          id?: string;
+          cache_key: string;
+          protocol_output: Json;
+          created_at?: string;
+          expires_at?: string;
+          hit_count?: number;
+        };
+        Update: {
+          id?: string;
+          cache_key?: string;
+          protocol_output?: Json;
+          created_at?: string;
+          expires_at?: string;
+          hit_count?: number;
+        };
+        Relationships: [];
+      };
+
+      push_subscriptions: {
+        Row: {
+          id: string;
+          client_id: string;
+          endpoint: string;
+          keys_p256dh: string;
+          keys_auth: string;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          endpoint: string;
+          keys_p256dh: string;
+          keys_auth: string;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          endpoint?: string;
+          keys_p256dh?: string;
+          keys_auth?: string;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      client_points: {
+        Row: {
+          id: string;
+          client_id: string;
+          total_points: number;
+          level: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          total_points?: number;
+          level?: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          total_points?: number;
+          level?: "graine" | "pousse" | "fleur" | "arbre";
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      client_point_events: {
+        Row: {
+          id: string;
+          client_id: string;
+          event_type: string;
+          points: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          event_type: string;
+          points: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          event_type?: string;
+          points?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      onboarding_sessions: {
+        Row: {
+          id: string;
+          client_id: string;
+          token: string;
+          step: number;
+          completed: boolean;
+          created_at: string;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          token?: string;
+          step?: number;
+          completed?: boolean;
+          created_at?: string;
+          expires_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          token?: string;
+          step?: number;
+          completed?: boolean;
+          created_at?: string;
+          expires_at?: string;
+        };
+        Relationships: [];
+      };
+
+      referral_codes: {
+        Row: {
+          id: string;
+          user_id: string;
+          code: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          code: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          code?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      referrals: {
+        Row: {
+          id: string;
+          referrer_id: string;
+          referred_id: string;
+          code: string;
+          status: "pending" | "converted" | "rewarded";
+          converted_at: string | null;
+          rewarded_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          referrer_id: string;
+          referred_id: string;
+          code: string;
+          status?: "pending" | "converted" | "rewarded";
+          converted_at?: string | null;
+          rewarded_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          referrer_id?: string;
+          referred_id?: string;
+          code?: string;
+          status?: "pending" | "converted" | "rewarded";
+          converted_at?: string | null;
+          rewarded_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      nps_responses: {
+        Row: {
+          id: string;
+          user_id: string;
+          score: number;
+          comment: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          score: number;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          score?: number;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      feature_requests: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          status: "backlog" | "in_progress" | "done" | "cancelled";
+          priority: number;
+          votes: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          status?: "backlog" | "in_progress" | "done" | "cancelled";
+          priority?: number;
+          votes?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          status?: "backlog" | "in_progress" | "done" | "cancelled";
+          priority?: number;
+          votes?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      lead_magnet_subscribers: {
+        Row: { id: string; email: string; source: string; created_at: string };
+        Insert: { id?: string; email: string; source?: string; created_at?: string };
+        Update: { id?: string; email?: string; source?: string; created_at?: string };
+        Relationships: [];
+      };
+
+      client_consents: {
+        Row: {
+          id: string;
+          client_id: string;
+          practitioner_id: string;
+          consent_type: "data_processing" | "health_data" | "photo" | "marketing";
+          granted: boolean;
+          ip_address: string | null;
+          signed_at: string | null;
+          revoked_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          practitioner_id: string;
+          consent_type: "data_processing" | "health_data" | "photo" | "marketing";
+          granted?: boolean;
+          ip_address?: string | null;
+          signed_at?: string | null;
+          revoked_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          practitioner_id?: string;
+          consent_type?: "data_processing" | "health_data" | "photo" | "marketing";
+          granted?: boolean;
+          ip_address?: string | null;
+          signed_at?: string | null;
+          revoked_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      deletion_requests: {
+        Row: {
+          id: string;
+          client_id: string;
+          practitioner_id: string;
+          requested_at: string;
+          processed_at: string | null;
+          status: "pending" | "processed";
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          practitioner_id: string;
+          requested_at?: string;
+          processed_at?: string | null;
+          status?: "pending" | "processed";
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          practitioner_id?: string;
+          requested_at?: string;
+          processed_at?: string | null;
+          status?: "pending" | "processed";
         };
         Relationships: [];
       };

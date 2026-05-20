@@ -2,10 +2,16 @@
 
 import { z } from "zod";
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { checkQuota, incrementQuota } from "@/lib/quotas";
+import { getAIModel, getModelId } from "@/lib/ai/client";
+import { logAIUsage } from "@/lib/ai/cost-tracker";
+import {
+  buildCacheKey,
+  getCachedProtocol,
+  setCachedProtocol,
+} from "@/lib/protocol-cache";
 import type { Database } from "@/types/supabase";
 
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -32,11 +38,18 @@ const protocolOutputSchema = z.object({
   contraindications: z.array(z.string()),
 });
 
+type ProtocolOutput = z.infer<typeof protocolOutputSchema>;
+
 export async function generateProtocol(
   clientId: string,
   specialty: "naturopathe" | "sophrologue" | "hypnotherapeute",
   context: string
-): Promise<{ error?: string; success?: boolean; data?: ProtocolRow }> {
+): Promise<{
+  error?: string;
+  success?: boolean;
+  data?: ProtocolRow;
+  fromCache?: boolean;
+}> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -57,21 +70,23 @@ export async function generateProtocol(
     hypnotherapeute: "hypnothérapie",
   };
 
-  const systemPrompt = `Tu es un assistant pour praticien de ${specialtyLabels[specialty]}. Tu génères des protocoles de conseil en hygiène de vie personnalisés. Tu NE poses JAMAIS de diagnostic médical. Tes recommandations sont uniquement des conseils en hygiène de vie. Tu réponds en français.`;
+  const cacheKey = buildCacheKey(specialty, context);
+  const cached = await getCachedProtocol(cacheKey);
 
-  const userPrompt = `Génère un protocole de conseil en hygiène de vie pour un client avec le contexte suivant : ${context}. Spécialité du praticien : ${specialtyLabels[specialty]}.`;
+  let result: ProtocolOutput;
+  let fromCache = false;
 
-  let result: z.infer<typeof protocolOutputSchema>;
-  try {
-    const { object } = await generateObject({
-      model: openai("gpt-4o-mini"),
-      schema: protocolOutputSchema,
-      system: systemPrompt,
-      prompt: userPrompt,
-    });
-    result = object;
-  } catch {
-    return { error: "Erreur lors de la génération du protocole IA" };
+  if (cached) {
+    const parsed = protocolOutputSchema.safeParse(cached);
+    if (parsed.success) {
+      result = parsed.data;
+      fromCache = true;
+    } else {
+      result = await callAI(specialtyLabels[specialty], context, user.id);
+    }
+  } else {
+    result = await callAI(specialtyLabels[specialty], context, user.id);
+    await setCachedProtocol(cacheKey, result as Record<string, unknown>);
   }
 
   const { data: inserted, error: insertError } = await supabase
@@ -100,7 +115,31 @@ export async function generateProtocol(
 
   await incrementQuota(user.id, "protocols");
 
-  return { success: true, data: inserted as ProtocolRow };
+  return { success: true, data: inserted as ProtocolRow, fromCache };
+}
+
+async function callAI(
+  specialtyLabel: string,
+  context: string,
+  userId: string
+): Promise<ProtocolOutput> {
+  const systemPrompt = `Tu es un assistant pour praticien de ${specialtyLabel}. Tu génères des protocoles de conseil en hygiène de vie personnalisés. Tu NE poses JAMAIS de diagnostic médical. Tes recommandations sont uniquement des conseils en hygiène de vie. Tu réponds en français.`;
+  const userPrompt = `Génère un protocole de conseil en hygiène de vie pour un client avec le contexte suivant : ${context}. Spécialité du praticien : ${specialtyLabel}.`;
+
+  const modelId = getModelId("protocol");
+  const { object, usage } = await generateObject({
+    model: getAIModel("protocol"),
+    schema: protocolOutputSchema,
+    system: systemPrompt,
+    prompt: userPrompt,
+  });
+
+  await logAIUsage(userId, "protocol", modelId, {
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+  }).catch(() => undefined);
+
+  return object;
 }
 
 export async function getProtocols(clientId?: string): Promise<ProtocolRow[]> {

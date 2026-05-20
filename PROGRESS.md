@@ -153,3 +153,37 @@
 - [ ] README.md complet
 - [ ] Script seed.ts
 - [ ] Lighthouse > 90
+
+---
+
+## v1.1 — Adaptations stratégiques post pré-mortem
+
+### Lot 1 — Repositionnement du wording ✅
+
+- [x] Grep complet sur tout le repo (35 occurrences identifiées)
+- [x] messages/fr.json : 7 remplacements
+- [x] messages/en.json : 7 remplacements
+- [x] components/shared/ : 10 remplacements (hero, pillars, pricing, testimonials, faq)
+- [x] app/dashboard/ : 9 remplacements
+- [x] app/(legal)/cgv/ : 3 remplacements
+- [x] Script check-no-forbidden-copy.ts créé
+- [x] docs/v1.1/lot-1.md documenté
+- Commit : `refactor(v1.1): repositioning - remove "IA" from user-facing copy`
+
+### Lot 2 — Importeur depuis les concurrents ⬜
+
+### Lot 3 — Boost engagement portail client ⬜
+
+### Lot 4 — Contrôle des coûts IA ⬜
+
+### Lot 5 — Focus naturopathes ⬜
+
+### Lot 6 — Programme d'ambassadrices ⬜
+
+### Lot 7 — Outils founder pour la vente ⬜
+
+### Lot 8 — Conformité renforcée ⬜
+
+### Lot 9 — Funnel d'acquisition ⬜
+
+### Lot 10 — Polish landing + métriques launch-ready ⬜
