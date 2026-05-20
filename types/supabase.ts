@@ -106,6 +106,7 @@ export interface Database {
           protocols_count: number;
           audios_count: number;
           company_programs_count: number;
+          summaries_count: number;
           created_at: string;
         };
         Insert: {
@@ -115,6 +116,7 @@ export interface Database {
           protocols_count?: number;
           audios_count?: number;
           company_programs_count?: number;
+          summaries_count?: number | null;
           created_at?: string;
         };
         Update: {
@@ -124,6 +126,7 @@ export interface Database {
           protocols_count?: number;
           audios_count?: number;
           company_programs_count?: number;
+          summaries_count?: number | null;
           created_at?: string;
         };
         Relationships: [];
@@ -699,6 +702,34 @@ export interface Database {
           cost_eur?: number;
           feature?: string;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      protocol_cache: {
+        Row: {
+          id: string;
+          cache_key: string;
+          protocol_output: Json;
+          created_at: string;
+          expires_at: string;
+          hit_count: number;
+        };
+        Insert: {
+          id?: string;
+          cache_key: string;
+          protocol_output: Json;
+          created_at?: string;
+          expires_at?: string;
+          hit_count?: number;
+        };
+        Update: {
+          id?: string;
+          cache_key?: string;
+          protocol_output?: Json;
+          created_at?: string;
+          expires_at?: string;
+          hit_count?: number;
         };
         Relationships: [];
       };
