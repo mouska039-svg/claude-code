@@ -13,12 +13,23 @@ function getStripe() {
 }
 
 export async function createCheckoutSession(
-  plan: "cabinet" | "cabinet_plus"
+  plan: "cabinet" | "cabinet_plus",
+  billing: "monthly" | "annual" = "monthly"
 ): Promise<{ url?: string; error?: string }> {
   const stripe = getStripe();
-  const planPriceMap: Record<string, string> = {
-    cabinet: process.env.STRIPE_PRICE_CABINET_MONTHLY!,
-    cabinet_plus: process.env.STRIPE_PRICE_CABINET_PLUS_MONTHLY!,
+  const planPriceMap: Record<string, Record<string, string>> = {
+    cabinet: {
+      monthly: process.env.STRIPE_PRICE_CABINET_MONTHLY!,
+      annual:
+        process.env.STRIPE_PRICE_CABINET_ANNUAL ??
+        process.env.STRIPE_PRICE_CABINET_MONTHLY!,
+    },
+    cabinet_plus: {
+      monthly: process.env.STRIPE_PRICE_CABINET_PLUS_MONTHLY!,
+      annual:
+        process.env.STRIPE_PRICE_CABINET_PLUS_ANNUAL ??
+        process.env.STRIPE_PRICE_CABINET_PLUS_MONTHLY!,
+    },
   };
 
   const supabase = await createClient();
@@ -48,7 +59,7 @@ export async function createCheckoutSession(
       .eq("user_id", user.id);
   }
 
-  const priceId = planPriceMap[plan];
+  const priceId = planPriceMap[plan]?.[billing];
   if (!priceId) return { error: "Plan invalide" };
 
   const session = await stripe.checkout.sessions.create({

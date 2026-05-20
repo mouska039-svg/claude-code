@@ -4,12 +4,14 @@ import { createCheckoutSession } from "@/server/actions/stripe";
 
 interface UpgradeButtonProps {
   plan: "cabinet" | "cabinet_plus";
+  billing?: "monthly" | "annual";
   label?: string;
   className?: string;
 }
 
 export function UpgradeButton({
   plan,
+  billing = "monthly",
   label = "Mettre à niveau",
   className,
 }: UpgradeButtonProps) {
@@ -20,7 +22,7 @@ export function UpgradeButton({
     setLoading(true);
     setError(null);
     try {
-      const result = await createCheckoutSession(plan);
+      const result = await createCheckoutSession(plan, billing);
       if (result.error) {
         setError(result.error);
         setLoading(false);

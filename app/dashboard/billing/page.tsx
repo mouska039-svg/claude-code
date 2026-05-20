@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getUserSubscription, isPlanActive } from "@/lib/subscription";
 import type { Database } from "@/types/supabase";
 import { UpgradeButton } from "./upgrade-button";
@@ -12,12 +13,6 @@ const PLAN_LABELS: Record<string, string> = {
   free: "Découverte",
   cabinet: "Cabinet",
   cabinet_plus: "Cabinet + Entreprise",
-};
-
-const PLAN_PRICES: Record<string, number> = {
-  free: 0,
-  cabinet: 39,
-  cabinet_plus: 79,
 };
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
@@ -54,7 +49,7 @@ function FeatureValue({ value }: { value: boolean | string }) {
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; cancelled?: string }>;
+  searchParams: Promise<{ success?: string; cancelled?: string; billing?: string }>;
 }) {
   const supabase = await createClient();
   const {
@@ -63,6 +58,8 @@ export default async function BillingPage({
   if (!user) redirect("/sign-in");
 
   const params = await searchParams;
+  const billing: "monthly" | "annual" =
+    params.billing === "annual" ? "annual" : "monthly";
   const subscription = (await getUserSubscription(user.id)) as SubscriptionRow | null;
   const plan = subscription?.plan ?? "free";
   const active = isPlanActive(subscription);
@@ -76,9 +73,10 @@ export default async function BillingPage({
       }).format(new Date(subscription.current_period_end))
     : null;
 
-  const monthlyPrice = PLAN_PRICES[plan] ?? 0;
-  const annualPrice = monthlyPrice * 12 * 0.8;
-  const annualSavings = monthlyPrice * 12 - annualPrice;
+  const MONTHLY_PRICES: Record<string, number> = { cabinet: 39, cabinet_plus: 79 };
+  const monthlyPrice = MONTHLY_PRICES[plan] ?? 0;
+  const annualSavings39 = Math.round(39 * 12 * 0.2);
+  const annualSavings79 = Math.round(79 * 12 * 0.2);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -138,9 +136,38 @@ export default async function BillingPage({
       </div>
 
       <div>
-        <h2 className="text-base font-semibold text-foreground mb-4">
-          Comparer les plans
-        </h2>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+          <h2 className="text-base font-semibold text-foreground">Comparer les plans</h2>
+          {/* Billing toggle */}
+          <div className="inline-flex items-center rounded-lg border border-border bg-muted p-1 gap-1">
+            <Link
+              href="/dashboard/billing?billing=monthly"
+              className={[
+                "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                billing === "monthly"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              ].join(" ")}
+            >
+              Mensuel
+            </Link>
+            <Link
+              href="/dashboard/billing?billing=annual"
+              className={[
+                "rounded-md px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5",
+                billing === "annual"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              ].join(" ")}
+            >
+              Annuel
+              <span className="rounded-full bg-sage/10 text-sage text-xs px-1.5 py-0.5 font-semibold">
+                −20%
+              </span>
+            </Link>
+          </div>
+        </div>
+
         <div className="rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] border-collapse">
@@ -159,9 +186,22 @@ export default async function BillingPage({
                         {p === "free"
                           ? "Gratuit"
                           : p === "cabinet"
-                            ? "39 € / mois"
-                            : "79 € / mois"}
+                            ? billing === "annual"
+                              ? `${Math.round(39 * 0.8)} € / mois`
+                              : "39 € / mois"
+                            : billing === "annual"
+                              ? `${Math.round(79 * 0.8)} € / mois`
+                              : "79 € / mois"}
                       </p>
+                      {billing === "annual" && p !== "free" && (
+                        <p className="text-xs text-sage mt-0.5">
+                          facturé{" "}
+                          {p === "cabinet"
+                            ? `${Math.round(39 * 12 * 0.8)} €`
+                            : `${Math.round(79 * 12 * 0.8)} €`}{" "}
+                          / an
+                        </p>
+                      )}
                       {plan === p && (
                         <span className="inline-block mt-1 text-xs bg-sage/10 text-sage rounded-full px-2 py-0.5">
                           Plan actuel
@@ -215,7 +255,11 @@ export default async function BillingPage({
                         Rétrograder via le portail
                       </span>
                     ) : (
-                      <UpgradeButton plan="cabinet" label="Choisir Cabinet" />
+                      <UpgradeButton
+                        plan="cabinet"
+                        billing={billing}
+                        label="Choisir Cabinet"
+                      />
                     )}
                   </td>
                   <td className="p-4 border-l border-border text-center">
@@ -224,6 +268,7 @@ export default async function BillingPage({
                     ) : (
                       <UpgradeButton
                         plan="cabinet_plus"
+                        billing={billing}
                         label="Choisir Cabinet+"
                         className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-terracotta text-white px-4 py-2 text-sm font-medium hover:bg-terracotta/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                       />
@@ -235,11 +280,13 @@ export default async function BillingPage({
           </div>
         </div>
 
-        {monthlyPrice > 0 && (
-          <p className="mt-4 text-sm text-center text-sage font-medium">
-            Vous économisez{" "}
-            <span className="font-semibold">{annualSavings.toFixed(0)} €</span> par an
-            avec la facturation annuelle (−20%)
+        {billing === "monthly" && monthlyPrice > 0 && (
+          <p className="mt-4 text-sm text-center text-muted-foreground">
+            Passez en annuel et économisez{" "}
+            <span className="font-semibold text-sage">
+              {plan === "cabinet_plus" ? annualSavings79 : annualSavings39} €
+            </span>{" "}
+            par an
           </p>
         )}
       </div>
