@@ -107,7 +107,7 @@ export default async function ClientsPage({
             <Link
               key={client.id}
               href={`/dashboard/clients/${client.id}`}
-              className="flex items-center gap-4 rounded-xl bg-card border border-border px-4 py-3 hover:bg-muted/40 transition-colors"
+              className="group flex items-center gap-4 rounded-xl bg-card border border-border px-4 py-3 hover:bg-muted/40 transition-all duration-150 hover:shadow-sm"
             >
               {/* Initials avatar — alternates sage / terracotta */}
               <div
@@ -154,7 +154,7 @@ export default async function ClientsPage({
                 </span>
                 <ChevronRight
                   size={18}
-                  className="text-muted-foreground"
+                  className="text-muted-foreground transition-transform duration-150 group-hover:translate-x-1"
                   aria-hidden="true"
                 />
               </div>

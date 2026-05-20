@@ -22,10 +22,13 @@ const PLAN_PRICES: Record<string, number> = {
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   active: { label: "Actif", className: "bg-sage/10 text-sage" },
-  trialing: { label: "Essai", className: "bg-blue-50 text-blue-700" },
-  past_due: { label: "Paiement en retard", className: "bg-amber-50 text-amber-700" },
+  trialing: { label: "Essai", className: "bg-terracotta/10 text-terracotta" },
+  past_due: {
+    label: "Paiement en retard",
+    className: "bg-destructive/10 text-destructive",
+  },
   canceled: { label: "Annulé", className: "bg-muted text-muted-foreground" },
-  unpaid: { label: "Impayé", className: "bg-red-50 text-red-700" },
+  unpaid: { label: "Impayé", className: "bg-destructive/10 text-destructive" },
 };
 
 const FEATURES = [

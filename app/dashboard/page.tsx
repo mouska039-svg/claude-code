@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Users, FileText, TrendingUp, Zap } from "lucide-react";
+import { Users, FileText, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 
@@ -102,8 +102,7 @@ export default async function DashboardPage() {
     .order("date", { ascending: true })
     .limit(5);
 
-  // Fetch client names separately to avoid join type complexity
-  const sessionIds = (sessionsRaw ?? []).map(
+  const upcomingSessions = (sessionsRaw ?? []).map(
     (s) => s as { id: string; date: string; type: string }
   );
 
@@ -112,15 +111,15 @@ export default async function DashboardPage() {
       label: "Clients actifs",
       value: data.activeClients,
       icon: Users,
-      color: "sage",
-      description: "en suivi actuellement",
+      color: "sage" as const,
+      description: "en suivi",
       href: "/dashboard/clients",
     },
     {
       label: "Cures en cours",
       value: data.activeCures,
       icon: FileText,
-      color: "terracotta",
+      color: "terracotta" as const,
       description: "protocoles actifs",
       href: "/dashboard/protocols",
     },
@@ -128,22 +127,40 @@ export default async function DashboardPage() {
       label: "CA du mois",
       value: formatCurrency(data.monthlyRevenue),
       icon: TrendingUp,
-      color: "sage",
+      color: "sage" as const,
       description: "facturé ce mois",
       href: "/dashboard/invoices",
     },
     {
-      label: "Quota Naya restant",
+      label: "Quota restant",
       value: data.quotaRemaining,
       icon: Zap,
-      color: data.quotaRemaining === "0" ? "destructive" : "terracotta",
+      color: (data.quotaRemaining === "0" ? "destructive" : "terracotta") as
+        | "terracotta"
+        | "destructive",
       description: "protocoles ce mois",
       href: "/dashboard/billing",
     },
   ];
 
+  const colorMap = {
+    sage: {
+      border: "border-l-sage",
+      icon: "bg-sage/10 text-sage",
+    },
+    terracotta: {
+      border: "border-l-terracotta",
+      icon: "bg-terracotta/10 text-terracotta",
+    },
+    destructive: {
+      border: "border-l-destructive",
+      icon: "bg-destructive/10 text-destructive",
+    },
+  };
+
   return (
     <div className="space-y-8">
+      {/* Page header */}
       <div>
         <h1 className="font-fraunces text-3xl font-semibold text-ink">Aperçu</h1>
         <p className="text-muted-foreground text-sm mt-1">
@@ -173,32 +190,35 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {STATS.map((stat) => {
           const Icon = stat.icon;
+          const colors = colorMap[stat.color];
           return (
             <Link
               key={stat.label}
               href={stat.href}
               aria-label={`${stat.label}: ${stat.value}`}
-              className="group rounded-xl bg-card border border-border p-5 hover:shadow-sm group-hover:shadow-md transition-shadow min-h-[100px]"
+              className={[
+                "group rounded-xl bg-card border border-border border-l-4 p-5",
+                "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+                colors.border,
+              ].join(" ")}
             >
-              <div className="flex items-start justify-between mb-3">
-                <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
-                <div
-                  className={[
-                    "p-1.5 rounded-lg",
-                    stat.color === "sage"
-                      ? "bg-sage/10 text-sage"
-                      : stat.color === "terracotta"
-                        ? "bg-terracotta/10 text-terracotta"
-                        : "bg-destructive/10 text-destructive",
-                  ].join(" ")}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                </div>
+              {/* Icon */}
+              <div className={["w-fit p-2.5 rounded-xl mb-4", colors.icon].join(" ")}>
+                <Icon className="h-5 w-5" />
               </div>
-              <p className="font-mono text-2xl font-semibold text-foreground tabular-nums">
+
+              {/* Value */}
+              <p className="font-fraunces text-3xl font-semibold text-ink tabular-nums leading-none">
                 {stat.value}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
+
+              {/* Label + description */}
+              <p className="text-xs font-medium text-muted-foreground mt-2">
+                {stat.label}
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-0.5">
+                {stat.description}
+              </p>
             </Link>
           );
         })}
@@ -210,19 +230,19 @@ export default async function DashboardPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/dashboard/clients/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2.5 text-sm font-medium text-sage hover:bg-sage/15 transition-colors cursor-pointer min-h-[44px]"
+            className="inline-flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-4 py-2.5 text-sm font-medium text-sage hover:bg-sage/15 transition-colors min-h-[44px]"
           >
             + Nouveau client
           </Link>
           <Link
             href="/dashboard/sessions/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2.5 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors cursor-pointer min-h-[44px]"
+            className="inline-flex items-center gap-2 rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-2.5 text-sm font-medium text-terracotta hover:bg-terracotta/15 transition-colors min-h-[44px]"
           >
             + Nouvelle séance
           </Link>
           <Link
             href="/dashboard/companies/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-muted border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors cursor-pointer min-h-[44px]"
+            className="inline-flex items-center gap-2 rounded-lg bg-muted border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors min-h-[44px]"
           >
             + Programme entreprise
           </Link>
@@ -231,28 +251,52 @@ export default async function DashboardPage() {
 
       {/* Upcoming sessions */}
       <div>
-        <h2 className="text-sm font-semibold text-foreground mb-3">Prochaines séances</h2>
-        {sessionIds.length === 0 ? (
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-foreground">Prochaines séances</h2>
+          {upcomingSessions.length > 0 && (
+            <Link
+              href="/dashboard/sessions"
+              className="text-xs text-sage hover:underline inline-flex items-center gap-1"
+            >
+              Voir tout <ArrowRight className="h-3 w-3" />
+            </Link>
+          )}
+        </div>
+
+        {upcomingSessions.length === 0 ? (
           <div className="rounded-xl bg-card border border-border p-8 text-center">
             <CalendarIcon className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">Aucune séance à venir</p>
+            <p className="text-sm font-medium text-foreground">Aucune séance à venir</p>
+            <p className="text-xs text-muted-foreground mt-1 mb-4">
+              Planifiez votre prochaine séance pour la voir apparaître ici
+            </p>
             <Link
               href="/dashboard/sessions/new"
-              className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-sage border border-sage/30 rounded-lg px-4 py-2.5 bg-sage/5 hover:bg-sage/10 transition-colors cursor-pointer min-h-[44px]"
+              className="inline-flex items-center gap-1 text-sm font-medium text-sage border border-sage/30 rounded-lg px-4 py-2.5 bg-sage/5 hover:bg-sage/10 transition-colors min-h-[44px]"
             >
               Planifier une séance →
             </Link>
           </div>
         ) : (
           <div className="rounded-xl bg-card border border-border divide-y divide-border overflow-hidden">
-            {sessionIds.map((session) => (
-              <div
+            {upcomingSessions.map((session) => (
+              <Link
                 key={session.id}
-                className="flex items-center justify-between px-5 py-3.5"
+                href={`/dashboard/sessions/${session.id}`}
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-muted/40 transition-colors min-h-[52px]"
               >
-                <p className="text-xs text-muted-foreground capitalize">
-                  {session.type === "presentiel" ? "Présentiel" : "Visio"}
-                </p>
+                <div className="flex items-center gap-3">
+                  <span
+                    className={[
+                      "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                      session.type === "presentiel"
+                        ? "bg-sage/10 text-sage"
+                        : "bg-terracotta/10 text-terracotta",
+                    ].join(" ")}
+                  >
+                    {session.type === "presentiel" ? "Présentiel" : "Visio"}
+                  </span>
+                </div>
                 <p className="text-xs font-medium text-muted-foreground">
                   {new Intl.DateTimeFormat("fr-FR", {
                     weekday: "short",
@@ -262,7 +306,7 @@ export default async function DashboardPage() {
                     minute: "2-digit",
                   }).format(new Date(session.date))}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         )}
