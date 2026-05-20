@@ -32,9 +32,7 @@ const FEATURES = [
   { label: "Séances & agenda", free: true, cabinet: true, plus: true },
   { label: "Devis & factures PDF", free: true, cabinet: true, plus: true },
   { label: "Tunnel client sécurisé", free: false, cabinet: true, plus: true },
-  { label: "Signature électronique", free: false, cabinet: true, plus: true },
   { label: "Programme entreprise", free: false, cabinet: false, plus: true },
-  { label: "Clone vocal", free: false, cabinet: false, plus: true },
   { label: "Accès multi-praticiens", free: false, cabinet: false, plus: true },
   { label: "Support prioritaire", free: false, cabinet: false, plus: true },
 ];

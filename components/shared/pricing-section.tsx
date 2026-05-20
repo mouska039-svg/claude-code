@@ -56,7 +56,7 @@ const PLANS = [
       "Tout Cabinet, plus...",
       "Module entreprises QVCT",
       "Protocoles & audios illimités",
-      "Clone vocal ElevenLabs",
+
       "Propositions commerciales assistées",
       "Facturation multi-échéances",
       "Compte-rendu DRH automatisé",

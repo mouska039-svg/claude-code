@@ -9,7 +9,7 @@ const FAQ_ITEMS = [
   {
     question: "Naya est-il conforme au RGPD ?",
     answer:
-      "Oui, entièrement. Les données sont hébergées en Europe (Supabase EU). Les anamnèses et données de santé sont chiffrées au repos. Un modèle de consentement RGPD avec signature électronique est intégré. Vous gardez le contrôle total de vos données et pouvez les exporter à tout moment.",
+      "Oui, entièrement. Les données sont hébergées en Europe (Supabase EU). Les anamnèses et données de santé sont chiffrées au repos. Un module de gestion des consentements RGPD est intégré. Vous gardez le contrôle total de vos données et pouvez les exporter à tout moment.",
   },
   {
     question: "Naya pose-t-il des diagnostics médicaux ?",
@@ -21,11 +21,7 @@ const FAQ_ITEMS = [
     answer:
       "Oui, dès le plan Cabinet. Vous pouvez ajouter votre logo, votre couleur d'accent et votre slogan. Les PDFs protocoles et le portail client refléteront votre identité de marque, avec Naya en mention discrète en footer.",
   },
-  {
-    question: "Comment fonctionne le clone vocal ElevenLabs ?",
-    answer:
-      "En plan Cabinet + Entreprise, vous pouvez enregistrer votre voix pour créer un clone vocal et générer des audios sophro/hypno avec votre propre voix. Cette fonctionnalité nécessite une validation d'identité et un consentement explicite (conditions d'utilisation ElevenLabs).",
-  },
+
   {
     question: "Puis-je annuler à tout moment ?",
     answer:
