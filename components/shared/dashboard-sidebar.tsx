@@ -12,6 +12,7 @@ import {
   Receipt,
   CreditCard,
   Settings,
+  LayoutTemplate,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { label: "Aperçu", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "Clients", href: "/dashboard/clients", icon: Users },
   { label: "Cures & protocoles", href: "/dashboard/protocols", icon: FileText },
+  { label: "Modèles", href: "/dashboard/templates", icon: LayoutTemplate },
   { label: "Séances", href: "/dashboard/sessions", icon: Calendar },
   { label: "Boutique", href: "/dashboard/shop", icon: ShoppingBag },
   { label: "Entreprises", href: "/dashboard/companies", icon: Building2 },
