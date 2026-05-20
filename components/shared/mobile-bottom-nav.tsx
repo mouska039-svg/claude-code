@@ -14,6 +14,8 @@ import {
   ShoppingBag,
   Building2,
   Settings,
+  Heart,
+  LayoutTemplate,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,8 +29,10 @@ const PRIMARY_NAV = [
 
 const SECONDARY_NAV = [
   { label: "Cures & protocoles", href: "/dashboard/protocols", icon: FileText },
+  { label: "Modèles", href: "/dashboard/templates", icon: LayoutTemplate },
   { label: "Boutique", href: "/dashboard/shop", icon: ShoppingBag },
   { label: "Entreprises", href: "/dashboard/companies", icon: Building2 },
+  { label: "Ambassadrice", href: "/dashboard/ambassador", icon: Heart },
   { label: "Abonnement", href: "/dashboard/billing", icon: CreditCard },
   { label: "Paramètres", href: "/dashboard/settings", icon: Settings },
 ];

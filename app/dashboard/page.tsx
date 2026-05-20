@@ -87,6 +87,11 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/sign-in");
 
+  const isAdmin = (process.env.ADMIN_USER_IDS ?? "")
+    .split(",")
+    .map((id) => id.trim())
+    .includes(user.id);
+
   const data = await getDashboardData(user.id);
 
   const { data: sessionsRaw } = await supabase
@@ -141,6 +146,24 @@ export default async function DashboardPage() {
           Bienvenue sur votre espace Naya
         </p>
       </div>
+
+      {/* Admin shortcut */}
+      {isAdmin && (
+        <div className="flex gap-3">
+          <Link
+            href="/admin/ai-costs"
+            className="inline-flex items-center gap-2 rounded-lg border border-sage/30 bg-sage/5 px-4 py-2 text-sm font-medium text-sage hover:bg-sage/10 transition-colors"
+          >
+            Coûts Naya
+          </Link>
+          <Link
+            href="/admin/kanban"
+            className="inline-flex items-center gap-2 rounded-lg border border-sage/30 bg-sage/5 px-4 py-2 text-sm font-medium text-sage hover:bg-sage/10 transition-colors"
+          >
+            Tableau founder
+          </Link>
+        </div>
+      )}
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
