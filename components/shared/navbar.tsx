@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: "Tarifs", href: "#pricing" },
   { label: "Témoignages", href: "#testimonials" },
   { label: "FAQ", href: "#faq" },
+  { label: "Ressources", href: "/ressources/guide-naturopathe" },
 ];
 
 export function Navbar() {
