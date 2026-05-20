@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import webPush from "web-push";
 import { createAdminClient } from "@/lib/supabase/server";
 
-webPush.setVapidDetails(
-  "mailto:noreply@naya.app",
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+const VAPID_PUBLIC = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY;
+
+if (VAPID_PUBLIC && VAPID_PRIVATE) {
+  webPush.setVapidDetails("mailto:noreply@naya.app", VAPID_PUBLIC, VAPID_PRIVATE);
+}
 
 export const runtime = "nodejs";
 
@@ -23,6 +24,10 @@ export async function GET(req: NextRequest) {
 
   if (!subscriptions || subscriptions.length === 0) {
     return NextResponse.json({ sent: 0 });
+  }
+
+  if (!VAPID_PUBLIC || !VAPID_PRIVATE) {
+    return NextResponse.json({ error: "VAPID keys not configured" }, { status: 503 });
   }
 
   const payload = JSON.stringify({
