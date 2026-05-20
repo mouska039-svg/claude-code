@@ -114,6 +114,7 @@ export default async function DashboardPage() {
       icon: Users,
       color: "sage",
       description: "en suivi actuellement",
+      href: "/dashboard/clients",
     },
     {
       label: "Cures en cours",
@@ -121,6 +122,7 @@ export default async function DashboardPage() {
       icon: FileText,
       color: "terracotta",
       description: "protocoles actifs",
+      href: "/dashboard/protocols",
     },
     {
       label: "CA du mois",
@@ -128,6 +130,7 @@ export default async function DashboardPage() {
       icon: TrendingUp,
       color: "sage",
       description: "facturé ce mois",
+      href: "/dashboard/invoices",
     },
     {
       label: "Quota Naya restant",
@@ -135,6 +138,7 @@ export default async function DashboardPage() {
       icon: Zap,
       color: data.quotaRemaining === "0" ? "destructive" : "terracotta",
       description: "protocoles ce mois",
+      href: "/dashboard/billing",
     },
   ];
 
@@ -170,10 +174,11 @@ export default async function DashboardPage() {
         {STATS.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div
+            <Link
               key={stat.label}
+              href={stat.href}
               aria-label={`${stat.label}: ${stat.value}`}
-              className="rounded-xl bg-card border border-border p-5 hover:shadow-sm transition-shadow min-h-[100px]"
+              className="group rounded-xl bg-card border border-border p-5 hover:shadow-sm group-hover:shadow-md transition-shadow min-h-[100px]"
             >
               <div className="flex items-start justify-between mb-3">
                 <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
@@ -194,7 +199,7 @@ export default async function DashboardPage() {
                 {stat.value}
               </p>
               <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
-            </div>
+            </Link>
           );
         })}
       </div>

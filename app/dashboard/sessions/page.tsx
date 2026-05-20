@@ -38,7 +38,7 @@ const typeLabel: Record<SessionRow["type"], string> = {
 
 const typeBadgeClass: Record<SessionRow["type"], string> = {
   presentiel: "bg-sage/10 text-sage",
-  visio: "bg-blue-50 text-blue-700",
+  visio: "bg-terracotta/10 text-terracotta",
 };
 
 function groupByMonth(

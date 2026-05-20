@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Search, Users } from "lucide-react";
+import { ChevronRight, Search, Users } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 
@@ -103,14 +103,17 @@ export default async function ClientsPage({
         </div>
       ) : (
         <div className="space-y-3">
-          {clients.map((client) => (
-            <div
+          {clients.map((client, index) => (
+            <Link
               key={client.id}
+              href={`/dashboard/clients/${client.id}`}
               className="flex items-center gap-4 rounded-xl bg-card border border-border px-4 py-3 hover:bg-muted/40 transition-colors"
             >
-              {/* Initials avatar */}
+              {/* Initials avatar — alternates sage / terracotta */}
               <div
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-white text-sm font-semibold"
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white text-sm font-semibold ${
+                  index % 2 === 0 ? "bg-sage" : "bg-terracotta"
+                }`}
                 aria-hidden="true"
               >
                 {getInitials(client.full_name)}
@@ -134,7 +137,7 @@ export default async function ClientsPage({
                 </div>
               </div>
 
-              {/* Status badge + Voir link */}
+              {/* Status badge + chevron */}
               <div className="flex items-center gap-3 ml-2 shrink-0">
                 <span
                   className={`hidden sm:inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -149,14 +152,13 @@ export default async function ClientsPage({
                       ? "Inactif"
                       : "Archivé"}
                 </span>
-                <Link
-                  href={`/dashboard/clients/${client.id}`}
-                  className="inline-flex items-center min-h-[44px] min-w-[44px] justify-center rounded-lg border border-sage/30 bg-sage/5 px-3 text-sm font-medium text-sage hover:bg-sage/10 transition-colors"
-                >
-                  Voir
-                </Link>
+                <ChevronRight
+                  size={18}
+                  className="text-muted-foreground"
+                  aria-hidden="true"
+                />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
