@@ -845,6 +845,62 @@ export interface Database {
         };
         Relationships: [];
       };
+
+      referral_codes: {
+        Row: {
+          id: string;
+          user_id: string;
+          code: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          code: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          code?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      referrals: {
+        Row: {
+          id: string;
+          referrer_id: string;
+          referred_id: string;
+          code: string;
+          status: "pending" | "converted" | "rewarded";
+          converted_at: string | null;
+          rewarded_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          referrer_id: string;
+          referred_id: string;
+          code: string;
+          status?: "pending" | "converted" | "rewarded";
+          converted_at?: string | null;
+          rewarded_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          referrer_id?: string;
+          referred_id?: string;
+          code?: string;
+          status?: "pending" | "converted" | "rewarded";
+          converted_at?: string | null;
+          rewarded_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
 
     Views: {

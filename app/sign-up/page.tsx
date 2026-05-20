@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { SignUpForm } from "./sign-up-form";
+import { RefCodeStore } from "./ref-code-store";
 
-export default function SignUpPage() {
+interface SignUpPageProps {
+  searchParams: Promise<{ ref?: string }>;
+}
+
+export default async function SignUpPage({ searchParams }: SignUpPageProps) {
+  const params = await searchParams;
+  const ref = typeof params.ref === "string" ? params.ref.trim() : undefined;
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex items-center justify-between px-6 py-4">
@@ -27,6 +35,17 @@ export default function SignUpPage() {
               Commencez gratuitement, aucune carte requise
             </p>
           </div>
+
+          {ref && (
+            <div className="mb-5 rounded-lg bg-sage/10 border border-sage/20 px-4 py-3 text-sm text-sage">
+              🎉 Vous avez été invité·e par un·e ambassadrice Naya. Votre compte sera lié
+              à ce parrainage.
+            </div>
+          )}
+
+          {/* Persist the ref code into localStorage so SignUpForm can read it */}
+          {ref && <RefCodeStore code={ref} />}
+
           <SignUpForm />
           <p className="text-center text-xs text-mist mt-6">
             Données hébergées en Europe • RGPD conforme
