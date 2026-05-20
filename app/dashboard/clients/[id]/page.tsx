@@ -6,6 +6,8 @@ import { getInitials } from "@/lib/utils";
 import type { Database } from "@/types/supabase";
 import { ClientPortalButton } from "@/components/client-portal-button";
 import { OnboardingQrButton } from "./onboarding-qr-button";
+import ClientConsentPanel from "@/components/client-consent-panel";
+import { getClientConsents } from "@/server/actions/consent";
 
 type ClientRow = Database["public"]["Tables"]["clients"]["Row"];
 type ProtocolRow = Database["public"]["Tables"]["protocols"]["Row"];
@@ -53,6 +55,7 @@ export default async function ClientDetailPage({
   if (!client) notFound();
 
   const protocols = await getClientProtocols(user.id, id);
+  const consents = await getClientConsents(id);
 
   const statusLabel: Record<ProtocolRow["status"], string> = {
     draft: "Brouillon",
@@ -260,6 +263,9 @@ export default async function ClientDetailPage({
           </div>
         )}
       </div>
+
+      {/* Consentements RGPD */}
+      <ClientConsentPanel clientId={id} initialConsents={consents} />
     </div>
   );
 }
