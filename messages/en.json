@@ -23,8 +23,8 @@
     "title": "Everything you need",
     "subtitle": "A platform built for wellness practitioners.",
     "ai": {
-      "title": "AI-powered treatment plans",
-      "description": "Generate personalized protocols in seconds from your client's intake form. Naturopathy, sophrology, hypnotherapy — each specialty has its own model."
+      "title": "Naya-guided treatment plans",
+      "description": "Naya structures personalized protocols from your client's intake form. Naturopathy, sophrology, hypnotherapy — each specialty has its own dedicated guide."
     },
     "portal": {
       "title": "Engaged mobile client portal",
@@ -50,7 +50,7 @@
         "description": "To discover Naya and start structuring your practice.",
         "features": [
           "Up to 5 clients",
-          "3 AI protocols / month",
+          "3 protocols / month",
           "2 generated audios / month",
           "Basic client portal",
           "Digital intake forms",
@@ -64,7 +64,7 @@
         "description": "For practitioners who want to grow their solo practice.",
         "features": [
           "Unlimited clients",
-          "30 AI protocols / month",
+          "30 protocols / month",
           "20 generated audios / month",
           "Full client portal with PWA",
           "Custom branding",
@@ -84,7 +84,7 @@
           "Unlimited protocols",
           "Unlimited audios",
           "ElevenLabs voice clone",
-          "AI commercial proposals",
+          "Smart commercial proposals",
           "Multi-installment invoicing",
           "Automated HR reports",
           "Dedicated support"
@@ -104,7 +104,7 @@
       {
         "name": "Marc T.",
         "role": "Sophrology therapist, Paris",
-        "content": "The corporate module helped me land my first corporate wellness contract with a 200-person company. The AI-generated commercial proposal was impressive."
+        "content": "The corporate module helped me land my first corporate wellness contract with a 200-person company. The commercial proposal created with Naya was impressive and highly professional."
       },
       {
         "name": "Isabelle R.",
@@ -121,8 +121,8 @@
         "answer": "Yes, fully. Data is hosted in Europe (Supabase EU). Intake forms and health data are encrypted at rest. A GDPR consent model with electronic signature is included. You maintain full control of your data."
       },
       {
-        "question": "Does the AI make medical diagnoses?",
-        "answer": "No, never. Naya is a tool for structuring treatment plans, not a medical tool. All generated protocols include a clear disclaimer: 'These recommendations are lifestyle advice and do not replace medical advice.'"
+        "question": "Does Naya make medical diagnoses?",
+        "answer": "No, never. Naya is a guide for structuring treatment plans, not a medical tool. All generated protocols include a clear disclaimer: 'These recommendations are lifestyle advice and do not replace medical advice.'"
       },
       {
         "question": "Can I use my own branding?",

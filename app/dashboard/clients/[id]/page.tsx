@@ -214,7 +214,7 @@ export default async function ClientDetailPage({
             <div>
               <p className="font-medium text-foreground">Aucun protocole</p>
               <p className="text-muted-foreground text-sm mt-1">
-                Générez un protocole personnalisé grâce à l&apos;IA
+                Générez un protocole personnalisé avec Naya
               </p>
             </div>
             <Link
@@ -222,7 +222,7 @@ export default async function ClientDetailPage({
               className="inline-flex items-center gap-2 min-h-[44px] rounded-lg bg-terracotta text-white px-5 py-2.5 text-sm font-medium hover:bg-terracotta/90 transition-colors"
             >
               <Sparkles size={14} aria-hidden="true" />
-              Générer un protocole IA
+              Générer avec Naya
             </Link>
           </div>
         ) : (

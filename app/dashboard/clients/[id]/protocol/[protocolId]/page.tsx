@@ -98,8 +98,8 @@ export default async function ProtocolDetailPage({
       <div className="rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3">
         <p className="font-medium mb-0.5">Avertissement médical</p>
         <p>
-          Ces recommandations sont des conseils en hygiène de vie générés par IA et ne
-          constituent pas un avis médical.
+          Ces recommandations sont des conseils en hygiène de vie rédigés avec
+          l&apos;assistance de Naya et ne constituent pas un avis médical.
         </p>
       </div>
 

@@ -18,7 +18,7 @@ const TESTIMONIALS = [
     role: "Sophrologue",
     location: "Paris",
     content:
-      "Le module entreprises m'a permis de décrocher mon premier contrat QVCT avec une PME de 200 personnes. La proposition commerciale générée par l'IA était bluffante et très professionnelle.",
+      "Le module entreprises m'a permis de décrocher mon premier contrat QVCT avec une PME de 200 personnes. La proposition commerciale créée avec Naya était bluffante et très professionnelle.",
     initials: "MT",
     color: "terracotta",
   },

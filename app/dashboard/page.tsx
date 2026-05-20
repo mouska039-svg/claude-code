@@ -125,7 +125,7 @@ export default async function DashboardPage() {
       description: "facturé ce mois",
     },
     {
-      label: "Quota IA restant",
+      label: "Quota Naya restant",
       value: data.quotaRemaining,
       icon: Zap,
       color: data.quotaRemaining === "0" ? "destructive" : "terracotta",

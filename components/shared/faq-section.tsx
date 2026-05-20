@@ -12,7 +12,7 @@ const FAQ_ITEMS = [
       "Oui, entièrement. Les données sont hébergées en Europe (Supabase EU). Les anamnèses et données de santé sont chiffrées au repos. Un modèle de consentement RGPD avec signature électronique est intégré. Vous gardez le contrôle total de vos données et pouvez les exporter à tout moment.",
   },
   {
-    question: "L'IA pose-t-elle des diagnostics médicaux ?",
+    question: "Naya pose-t-il des diagnostics médicaux ?",
     answer:
       "Non, jamais. Naya est un outil d'aide à la structuration des cures, pas un outil médical. Tous les protocoles générés contiennent un disclaimer clair : « Ces recommandations relèvent du conseil en hygiène de vie et ne se substituent pas à un avis médical. Consultez votre médecin avant toute modification de traitement. »",
   },

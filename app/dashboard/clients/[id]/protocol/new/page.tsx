@@ -34,7 +34,7 @@ const SPECIALTY_OPTIONS: {
 ];
 
 const RGPD_DISCLAIMER =
-  "Ces recommandations sont des conseils en hygiène de vie générés par IA et ne constituent pas un avis médical. Elles ne remplacent pas une consultation médicale. Consultez votre médecin avant toute modification de traitement ou de prise en charge.";
+  "Ces recommandations sont des conseils en hygiène de vie rédigés avec l'assistance de Naya et ne constituent pas un avis médical. Elles ne remplacent pas une consultation médicale. Consultez votre médecin avant toute modification de traitement ou de prise en charge.";
 
 export default function NewProtocolPage() {
   const params = useParams<{ id: string }>();
@@ -209,7 +209,8 @@ export default function NewProtocolPage() {
           Générer un protocole
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
-          L&apos;IA génère des recommandations d&apos;hygiène de vie personnalisées.
+          Naya vous aide à structurer des recommandations d&apos;hygiène de vie
+          personnalisées.
         </p>
       </div>
 
@@ -288,7 +289,7 @@ export default function NewProtocolPage() {
                 Génération en cours…
               </>
             ) : (
-              "Générer le protocole IA ✦"
+              "Générer avec Naya ✦"
             )}
           </button>
           <button

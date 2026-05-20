@@ -7,7 +7,7 @@ const PILLARS = [
   {
     icon: Brain,
     color: "sage",
-    title: "Cures structurées par IA",
+    title: "Protocoles guidés par Naya",
     description:
       "Générez des protocoles personnalisés en quelques secondes à partir de l'anamnèse de votre client. Naturopathie, sophrologie, hypnothérapie — chaque spécialité a son propre modèle.",
     features: [
@@ -35,7 +35,7 @@ const PILLARS = [
     description:
       "Proposez des programmes bien-être aux entreprises. Générez des propositions commerciales convaincantes, suivez les participants, facturez en multi-échéances.",
     features: [
-      "Propositions commerciales IA",
+      "Propositions commerciales assistées",
       "Suivi des participants RGPD",
       "Compte-rendu DRH automatisé",
     ],

@@ -21,7 +21,7 @@ export function HeroSection() {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center rounded-full bg-sage/10 px-4 py-1.5 text-xs font-medium text-sage mb-8"
         >
-          Bien-être professionnel · IA &amp; praticiens
+          Bien-être professionnel · Naya &amp; praticiens
         </motion.div>
 
         <motion.h1
@@ -32,7 +32,7 @@ export function HeroSection() {
         >
           Votre cabinet,
           <br className="hidden sm:block" />
-          réinventé par l&apos;IA
+          guidé par Naya
         </motion.h1>
 
         <motion.p
@@ -41,8 +41,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10"
         >
-          Protocoles personnalisés, suivi client simplifié, facturation automatisée — tout
-          ce dont un praticien du bien-être a besoin.
+          Le guide digital qui structure vos cures et prolonge l&apos;effet de vos
+          séances.
         </motion.p>
 
         <motion.div
@@ -89,7 +89,7 @@ export function HeroSection() {
             </div>
             <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="rounded-xl bg-sage/10 border border-sage/20 p-4 space-y-3">
-                <p className="text-xs font-medium text-sage">Protocoles IA</p>
+                <p className="text-xs font-medium text-sage">Protocoles Naya</p>
                 <p className="font-fraunces text-2xl font-semibold text-sage">
                   3 générés
                 </p>
