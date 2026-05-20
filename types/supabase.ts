@@ -901,6 +901,65 @@ export interface Database {
         };
         Relationships: [];
       };
+
+      nps_responses: {
+        Row: {
+          id: string;
+          user_id: string;
+          score: number;
+          comment: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          score: number;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          score?: number;
+          comment?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      feature_requests: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          status: "backlog" | "in_progress" | "done" | "cancelled";
+          priority: number;
+          votes: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          status?: "backlog" | "in_progress" | "done" | "cancelled";
+          priority?: number;
+          votes?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          status?: "backlog" | "in_progress" | "done" | "cancelled";
+          priority?: number;
+          votes?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
 
     Views: {
