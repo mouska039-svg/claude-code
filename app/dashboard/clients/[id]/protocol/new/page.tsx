@@ -33,6 +33,83 @@ const SPECIALTY_OPTIONS: {
   { value: "hypnotherapeute", label: "Hypnothérapeute" },
 ];
 
+type SpecialtyChip = {
+  label: string;
+  starter: string;
+};
+
+const SPECIALTY_CHIPS: Record<
+  "naturopathe" | "sophrologue" | "hypnotherapeute",
+  SpecialtyChip[]
+> = {
+  naturopathe: [
+    {
+      label: "Fatigue chronique",
+      starter:
+        "Client présentant une fatigue chronique persistante depuis plusieurs mois, avec des difficultés à récupérer malgré un sommeil suffisant. Alimentation déséquilibrée, sédentarité, et stress professionnel importants.",
+    },
+    {
+      label: "Digestion difficile",
+      starter:
+        "Client souffrant de troubles digestifs récurrents : ballonnements, inconfort post-prandial et transit irrégulier depuis plus d'un an. Alimentation rapide, peu de fibres, et consommation régulière d'aliments transformés.",
+    },
+    {
+      label: "Troubles du sommeil",
+      starter:
+        "Client présentant des difficultés d'endormissement et des réveils nocturnes fréquents depuis plusieurs semaines, avec une fatigue matinale persistante. Exposition tardive aux écrans et horaires de coucher irréguliers.",
+    },
+    {
+      label: "Immunité basse",
+      starter:
+        "Client présentant des infections à répétition (rhumes, angines) sur les derniers mois, signe d'une immunité fragilisée. Terrain de stress chronique, alimentation pauvre en micronutriments et manque de sommeil réparateur.",
+    },
+  ],
+  sophrologue: [
+    {
+      label: "Stress professionnel",
+      starter:
+        "Client en situation de stress professionnel intense, avec des tensions physiques, des difficultés de concentration et un sentiment de surcharge mentale chronique. Recherche des outils concrets pour retrouver un équilibre au quotidien.",
+    },
+    {
+      label: "Anxiété",
+      starter:
+        "Client présentant une anxiété généralisée avec manifestations somatiques : palpitations, tension musculaire et ruminations fréquentes. Souhaite développer des ressources intérieures pour calmer les pensées envahissantes.",
+    },
+    {
+      label: "Troubles du sommeil",
+      starter:
+        "Client présentant des difficultés d'endormissement et des réveils nocturnes fréquents depuis plusieurs semaines, avec une fatigue matinale persistante. Cherche des techniques de relaxation et de lâcher-prise avant le coucher.",
+    },
+    {
+      label: "Préparation mentale",
+      starter:
+        "Client souhaitant renforcer sa confiance et sa concentration en vue d'un événement important (examen, compétition, entretien professionnel). Travail sur la visualisation positive et la gestion du trac.",
+    },
+  ],
+  hypnotherapeute: [
+    {
+      label: "Confiance en soi",
+      starter:
+        "Client présentant un manque de confiance en soi impactant ses relations professionnelles et personnelles, avec des croyances limitantes ancrées depuis l'enfance. Souhaite reprogrammer ses schémas intérieurs pour agir avec plus d'assurance.",
+    },
+    {
+      label: "Sevrage tabagique",
+      starter:
+        "Client fumeur depuis plusieurs années, motivé pour arrêter définitivement le tabac sans substitut nicotinique. Souhaite travailler sur les déclencheurs émotionnels et les habitudes associées à la cigarette.",
+    },
+    {
+      label: "Gestion des peurs",
+      starter:
+        "Client présentant une peur spécifique (phobie, peur de l'échec, peur du jugement) qui limite son quotidien de façon significative. Cherche à désensibiliser cette peur et à la remplacer par une réponse émotionnelle plus adaptée.",
+    },
+    {
+      label: "Prise de décision",
+      starter:
+        "Client présentant des difficultés récurrentes à prendre des décisions importantes, paralysé par le doute et la peur des conséquences. Souhaite accéder à ses ressources intérieures pour choisir avec clarté et sérénité.",
+    },
+  ],
+};
+
 const RGPD_DISCLAIMER =
   "Ces recommandations sont des conseils en hygiène de vie rédigés avec l'assistance de Naya et ne constituent pas un avis médical. Elles ne remplacent pas une consultation médicale. Consultez votre médecin avant toute modification de traitement ou de prise en charge.";
 
@@ -240,6 +317,25 @@ export default function NewProtocolPage() {
                   }`}
                 >
                   {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Suggestions rapides */}
+          <div>
+            <p className="text-xs font-medium text-muted-foreground mb-2">
+              Suggestions rapides
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {SPECIALTY_CHIPS[specialty].map((chip) => (
+                <button
+                  key={chip.label}
+                  type="button"
+                  onClick={() => setContext(chip.starter)}
+                  className="rounded-full bg-sage/8 text-sage text-xs font-medium px-3 py-1.5 hover:bg-sage/15 transition-colors"
+                >
+                  {chip.label}
                 </button>
               ))}
             </div>
