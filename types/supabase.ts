@@ -967,6 +967,71 @@ export interface Database {
         Update: { id?: string; email?: string; source?: string; created_at?: string };
         Relationships: [];
       };
+
+      client_consents: {
+        Row: {
+          id: string;
+          client_id: string;
+          practitioner_id: string;
+          consent_type: "data_processing" | "health_data" | "photo" | "marketing";
+          granted: boolean;
+          ip_address: string | null;
+          signed_at: string | null;
+          revoked_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          practitioner_id: string;
+          consent_type: "data_processing" | "health_data" | "photo" | "marketing";
+          granted?: boolean;
+          ip_address?: string | null;
+          signed_at?: string | null;
+          revoked_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          practitioner_id?: string;
+          consent_type?: "data_processing" | "health_data" | "photo" | "marketing";
+          granted?: boolean;
+          ip_address?: string | null;
+          signed_at?: string | null;
+          revoked_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+
+      deletion_requests: {
+        Row: {
+          id: string;
+          client_id: string;
+          practitioner_id: string;
+          requested_at: string;
+          processed_at: string | null;
+          status: "pending" | "processed";
+        };
+        Insert: {
+          id?: string;
+          client_id: string;
+          practitioner_id: string;
+          requested_at?: string;
+          processed_at?: string | null;
+          status?: "pending" | "processed";
+        };
+        Update: {
+          id?: string;
+          client_id?: string;
+          practitioner_id?: string;
+          requested_at?: string;
+          processed_at?: string | null;
+          status?: "pending" | "processed";
+        };
+        Relationships: [];
+      };
     };
 
     Views: {
