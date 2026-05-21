@@ -2,7 +2,7 @@
 
 ---
 
-## Oumar Diallo, fondateur de Naya
+## Oumar, fondateur de Naya
 
 [Photo d'Oumar — à ajouter]
 
@@ -48,7 +48,7 @@ Si quelque chose ne fonctionne pas comme tu l'attends, je veux le savoir. Si une
 ## Me retrouver
 
 - **Instagram** : [@naya.app](https://instagram.com/naya.app)
-- **LinkedIn** : Oumar Diallo _(lien à ajouter)_
+- **LinkedIn** : Oumar _(lien à ajouter)_
 - **Email** : hello@naya.app
 
 ---
