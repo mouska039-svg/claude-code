@@ -47,8 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // Send the guide email via Resend
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const fromAddress =
-      process.env.RESEND_FROM_EMAIL ?? "noreply@naya-praticien.vercel.app";
+    const fromAddress = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
     await resend.emails
       .send({
