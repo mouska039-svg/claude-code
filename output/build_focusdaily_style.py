@@ -1,652 +1,574 @@
 #!/usr/bin/env python3
 """
-BudgetPro — FocusDaily-inspired dark-mode budget tracker
-Output: output/BudgetPro-Style.xlsx
+BudgetPro-Style.xlsx generator
+Premium dark-mode budget tracker using only openpyxl
 """
-from openpyxl import Workbook
-from openpyxl.styles import (PatternFill, Font, Alignment, Border, Side,
-                               GradientFill)
-from openpyxl.utils import get_column_letter
-from openpyxl.chart import BarChart, PieChart, LineChart, Reference, Series
-from openpyxl.chart.label import DataLabelList
-from openpyxl.formatting.rule import FormulaRule
-from openpyxl.worksheet.datavalidation import DataValidation
+
 import os
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+from openpyxl.utils import get_column_letter, column_index_from_string
+from openpyxl.chart import BarChart, Reference, Series
 
-# ── Palette ────────────────────────────────────────────────────────────────────
-BG_DARK   = "1A1A2E"   # main bg
-BG_MID    = "16213E"   # section header bg
-BG_CARD   = "0F3460"   # card / panel bg
-BG_ROW    = "1E2A45"   # alternating data row
-BG_TOTAL  = "0A1628"   # totals row
-SAGE      = "5C7A6B"
-TERRA     = "D4876B"
-GOLD      = "E2B96F"
-MINT      = "4ECDC4"
-PINK      = "FF6B9D"
-WHITE     = "FFFFFF"
-MUTED     = "8B8A87"
-RED_SOFT  = "E05252"
-GREEN_SOFT= "4CAF87"
+# ── Color Palette ──────────────────────────────────────────────────────────────
+BG_DARK      = "1A1A2E"
+BG_MID       = "16213E"
+BG_CARD      = "0F3460"
+ACCENT_SAGE  = "5C7A6B"
+ACCENT_TERRA = "D4876B"
+ACCENT_GOLD  = "E2B96F"
+TEXT_WHITE   = "FFFFFF"
+TEXT_MUTED   = "8B8A87"
+INPUT_YELLOW = "FFFDE7"
+BORDER_COLOR = "2D2D4E"
 
-MONTHS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin",
-             "Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
-MONTHS_EN = ["Janvier","Fevrier","Mars","Avril","Mai","Juin",
-             "Juillet","Aout","Septembre","Octobre","Novembre","Decembre"]
+# ── Fills ──────────────────────────────────────────────────────────────────────
+def fill(color):
+    return PatternFill(patternType="solid", fgColor=color)
 
-REVENUS_CATS   = ["Salaire net","Freelance / Side","Aides / APL","Autres revenus"]
-FIXES_CATS     = ["Loyer / Crédit immo","Assurances","Abonnements","Téléphone / Internet"]
-VARIABLES_CATS = ["Alimentation","Transport","Santé","Loisirs","Shopping","Restaurant","Beauté","Autre"]
-CREDITS_CATS   = ["Crédit auto","Crédit conso","Autre crédit"]
-EPARGNE_CATS   = ["Livret A","PEL / CEL","Assurance-vie","Investissements"]
-
-SECTIONS = [
-    ("💰 REVENUS",        REVENUS_CATS,   SAGE),
-    ("🏠 DÉPENSES FIXES", FIXES_CATS,     TERRA),
-    ("🛒 DÉPENSES VARIABLES", VARIABLES_CATS, GOLD),
-    ("💳 CRÉDITS",        CREDITS_CATS,   MINT),
-    ("🏦 ÉPARGNE",        EPARGNE_CATS,   PINK),
-]
-
-wb = Workbook()
-wb.remove(wb.active)
-
-# ── Helpers ────────────────────────────────────────────────────────────────────
-def P(hex_color):
-    return PatternFill("solid", fgColor=hex_color)
-
-def F(hex_color, bold=False, size=11, name="Calibri", italic=False):
-    return Font(color=hex_color, bold=bold, size=size, name=name, italic=italic)
-
-def A(h="center", v="center", wrap=False):
-    return Alignment(horizontal=h, vertical=v, wrap_text=wrap)
-
-def thin_border(color="2A3F6B"):
-    s = Side(style="thin", color=color)
+def thin_border():
+    s = Side(border_style="thin", color=BORDER_COLOR)
     return Border(left=s, right=s, top=s, bottom=s)
 
-def bottom_border(color="2A3F6B"):
-    s = Side(style="thin", color=color)
-    return Border(bottom=s)
+align_center = Alignment(horizontal="center", vertical="center")
+align_left   = Alignment(horizontal="left",   vertical="center", indent=1)
+align_right  = Alignment(horizontal="right",  vertical="center")
 
-def set_cell(ws, row, col, value=None, fill=None, font=None, align=None,
-             border=None, number_format=None):
-    c = ws.cell(row=row, column=col)
-    if value is not None: c.value = value
-    if fill: c.fill = fill
-    if font: c.font = font
-    if align: c.alignment = align
-    if border: c.border = border
-    if number_format: c.number_format = number_format
-    return c
+MONTHS = [
+    "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
+]
 
-def fill_row(ws, row, ncols, fill, start_col=1):
-    for c in range(start_col, start_col + ncols):
-        ws.cell(row=row, column=c).fill = fill
+MONTHS_DISPLAY = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+]
 
-def merge_fill(ws, r1, c1, r2, c2, value, fill, font, align=None):
-    ws.merge_cells(start_row=r1, start_column=c1, end_row=r2, end_column=c2)
-    c = ws.cell(row=r1, column=c1)
-    c.value = value
-    c.fill = fill
-    c.font = font
-    c.alignment = align or A("center","center")
-    return c
+SECTIONS = [
+    {
+        "header": "💰 REVENUS",
+        "cats": ["Salaire", "Freelance", "Aides/APL", "Autres revenus"]
+    },
+    {
+        "header": "🏠 DÉPENSES FIXES",
+        "cats": ["Loyer/Crédit", "Assurances", "Abonnements", "Téléphone/Internet"]
+    },
+    {
+        "header": "🛒 DÉPENSES VARIABLES",
+        "cats": ["Alimentation", "Transport", "Santé", "Loisirs", "Shopping", "Restaurant", "Beauté", "Autre"]
+    },
+    {
+        "header": "💳 CRÉDITS",
+        "cats": ["Crédit auto", "Crédit conso", "Autre crédit"]
+    },
+    {
+        "header": "🏦 ÉPARGNE",
+        "cats": ["Livret A", "PEL", "Assurance-vie", "Investissements"]
+    },
+]
 
-NCOLS = 7  # A=cat B=budget C=réel D=écart E=% F=bar G=🚦
 
-def paint_bg(ws, total_rows, ncols=NCOLS):
-    """Paint the entire sheet dark."""
-    for r in range(1, total_rows + 1):
-        for c in range(1, ncols + 1):
-            ws.cell(row=r, column=c).fill = P(BG_DARK)
+def style_cell(cell, bg=BG_DARK, fg=TEXT_WHITE, size=10, bold=False,
+               align=None, num_fmt=None, border=True, font_name="Calibri"):
+    cell.fill = fill(bg)
+    cell.font = Font(color=fg, size=size, bold=bold, name=font_name)
+    cell.alignment = align or align_left
+    if num_fmt:
+        cell.number_format = num_fmt
+    if border:
+        cell.border = thin_border()
 
-# ── Monthly tab builder ─────────────────────────────────────────────────────────
-def build_monthly(ws, month_idx):
+
+def merge_title(ws, cell_range, text, bg, fg=TEXT_WHITE, size=11, bold=False, align=None):
+    ws.merge_cells(cell_range)
+    top_left_ref = cell_range.split(":")[0]
+    cell = ws[top_left_ref]
+    cell.value = text
+    cell.fill = fill(bg)
+    cell.font = Font(color=fg, size=size, bold=bold, name="Calibri")
+    cell.alignment = align or align_center
+    return cell
+
+
+def set_col_widths(ws, widths):
+    for col_letter, width in widths.items():
+        ws.column_dimensions[col_letter].width = width
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MONTHLY SHEET BUILDER
+# ══════════════════════════════════════════════════════════════════════════════
+
+def build_monthly(ws, month_name, month_display):
     ws.sheet_view.showGridLines = False
-    ws.sheet_properties.tabColor = "0F3460"
-    ws.freeze_panes = "B2"
+    ws.sheet_properties.tabColor = BG_CARD
 
-    # Column widths
-    widths = [26, 14, 14, 14, 10, 22, 5]
-    for i, w in enumerate(widths, 1):
-        ws.column_dimensions[get_column_letter(i)].width = w
+    set_col_widths(ws, {
+        "A": 25, "B": 14, "C": 14, "D": 14, "E": 10, "F": 22, "G": 6
+    })
 
-    # Pre-fill background
-    for r in range(1, 100):
-        for c in range(1, NCOLS + 1):
-            ws.cell(row=r, column=c).fill = P(BG_DARK)
-
-    # Row 1: month banner
+    # Row 1: Month title
     ws.row_dimensions[1].height = 36
-    ws.merge_cells("A1:G1")
-    c = ws.cell(row=1, column=1)
-    c.value = f"✦  {MONTHS_FR[month_idx].upper()}  ✦"
-    c.fill = P(BG_CARD)
-    c.font = F(GOLD, bold=True, size=16, name="Calibri")
-    c.alignment = A("center","center")
+    merge_title(ws, "A1:G1", f"📅 {month_display.upper()}", BG_CARD,
+                size=18, bold=True)
 
-    # Row 2: column headers
-    ws.row_dimensions[2].height = 24
-    headers = ["Catégorie","Budget prévu","Réel dépensé","Écart","% utilisé","Progression",""]
-    for i, h in enumerate(headers, 1):
-        c = ws.cell(row=2, column=i)
-        c.value = h
-        c.fill = P(BG_MID)
-        c.font = F(MUTED, bold=True, size=9)
-        c.alignment = A("center","center")
+    r = 2  # row counter
 
-    cur_row = 3
-    section_totals = {}  # section_name -> (budget_col_refs, reel_col_refs)
+    total_rows = {}        # sec_idx -> row number of the TOTAL row
+    section_ranges = {}    # sec_idx -> (first_cat_row, last_cat_row)
 
-    for sec_name, cats, accent in SECTIONS:
-        # Section header row
-        ws.row_dimensions[cur_row].height = 22
-        ws.merge_cells(f"A{cur_row}:G{cur_row}")
-        c = ws.cell(row=cur_row, column=1)
-        c.value = sec_name
-        c.fill = P(BG_MID)
-        c.font = F(accent, bold=True, size=10)
-        c.alignment = A("left","center")
-        # small left border accent
-        cur_row += 1
+    for sec_idx, section in enumerate(SECTIONS):
+        # Section header
+        ws.row_dimensions[r].height = 22
+        merge_title(ws, f"A{r}:G{r}", section["header"], BG_MID,
+                    size=12, bold=True, align=align_left)
+        r += 1
 
-        data_start = cur_row
-        for cat in cats:
-            ws.row_dimensions[cur_row].height = 20
-            r = cur_row
-            bg = P(BG_ROW) if (cur_row % 2 == 0) else P(BG_DARK)
+        # Column headers
+        ws.row_dimensions[r].height = 18
+        col_headers = ["Catégorie", "Budget Prévu", "Réel", "Écart", "%", "Progression", "✓"]
+        for c_idx, hdr in enumerate(col_headers, start=1):
+            cell = ws.cell(row=r, column=c_idx, value=hdr)
+            style_cell(cell, bg=BG_CARD, fg=TEXT_WHITE, size=10, bold=True,
+                       align=align_center)
+        r += 1
 
-            # A: category
-            c = ws.cell(row=r, column=1)
-            c.value = cat
-            c.fill = bg
-            c.font = F(WHITE, size=10)
-            c.alignment = A("left","center")
+        first_cat = r
+        for cat in section["cats"]:
+            ws.row_dimensions[r].height = 18
 
-            # B: budget (user input)
-            c = ws.cell(row=r, column=2)
-            c.value = 0
-            c.fill = bg
-            c.font = F(WHITE, size=10)
-            c.alignment = A("center","center")
-            c.number_format = '#,##0 "€"'
+            # A: name
+            cell = ws.cell(row=r, column=1, value=cat)
+            style_cell(cell, bg=BG_DARK, fg=TEXT_WHITE, size=10, align=align_left)
 
-            # C: réel (user input)
-            c = ws.cell(row=r, column=3)
-            c.value = 0
-            c.fill = bg
-            c.font = F(WHITE, size=10)
-            c.alignment = A("center","center")
-            c.number_format = '#,##0 "€"'
+            # B: budget input (yellow)
+            cell = ws.cell(row=r, column=2)
+            style_cell(cell, bg=INPUT_YELLOW, fg=BG_DARK, size=10,
+                       align=align_right, num_fmt='#,##0.00 €')
+
+            # C: real input (yellow)
+            cell = ws.cell(row=r, column=3)
+            style_cell(cell, bg=INPUT_YELLOW, fg=BG_DARK, size=10,
+                       align=align_right, num_fmt='#,##0.00 €')
 
             # D: écart
-            c = ws.cell(row=r, column=4)
-            c.value = f"=B{r}-C{r}"
-            c.fill = bg
-            c.font = F(WHITE, size=10)
-            c.alignment = A("center","center")
-            c.number_format = '#,##0 "€"'
+            cell = ws.cell(row=r, column=4, value=f"=B{r}-C{r}")
+            style_cell(cell, bg=BG_DARK, fg=TEXT_WHITE, size=10,
+                       align=align_right, num_fmt='#,##0.00 €')
 
             # E: %
-            c = ws.cell(row=r, column=5)
-            c.value = f'=IF(B{r}=0,"—",C{r}/B{r})'
-            c.fill = bg
-            c.font = F(WHITE, size=10)
-            c.alignment = A("center","center")
-            c.number_format = "0%"
+            cell = ws.cell(row=r, column=5,
+                           value=f'=IF(B{r}=0,"—",C{r}/B{r})')
+            style_cell(cell, bg=BG_DARK, fg=TEXT_WHITE, size=10,
+                       align=align_center, num_fmt='0%')
 
             # F: progress bar
-            c = ws.cell(row=r, column=6)
-            c.value = (f'=IF(B{r}=0,"",'
-                       f'REPT("▓",MIN(20,INT(C{r}/B{r}*20)))'
-                       f'&REPT("░",MAX(0,20-MIN(20,INT(C{r}/B{r}*20)))))')
-            c.fill = bg
-            c.font = Font(name="Courier New", color=accent, size=9)
-            c.alignment = A("left","center")
+            formula_f = (
+                f'=IF(B{r}=0,"",'
+                f'REPT("▓",MIN(20,INT(C{r}/B{r}*20)))'
+                f'&REPT("░",MAX(0,20-MIN(20,INT(C{r}/B{r}*20)))))'
+            )
+            cell = ws.cell(row=r, column=6, value=formula_f)
+            cell.fill = fill(BG_DARK)
+            cell.font = Font(color=ACCENT_SAGE, size=9, name="Courier New")
+            cell.alignment = align_left
+            cell.border = thin_border()
 
             # G: traffic light
-            c = ws.cell(row=r, column=7)
-            c.value = f'=IF(C{r}=0,"⬜",IF(C{r}/B{r}<0.8,"🟢",IF(C{r}/B{r}<=1,"🟡","🔴")))'
-            c.fill = bg
-            c.font = F(WHITE, size=11)
-            c.alignment = A("center","center")
+            formula_g = (
+                f'=IF(C{r}="","⬜",'
+                f'IF(C{r}/B{r}<0.8,"🟢",'
+                f'IF(C{r}/B{r}<=1,"🟡","🔴")))'
+            )
+            cell = ws.cell(row=r, column=7, value=formula_g)
+            style_cell(cell, bg=BG_DARK, fg=TEXT_WHITE, size=12,
+                       align=align_center, font_name="Segoe UI Emoji")
 
-            cur_row += 1
+            r += 1
 
-        data_end = cur_row - 1
+        last_cat = r - 1
+        section_ranges[sec_idx] = (first_cat, last_cat)
 
-        # Section total row
-        ws.row_dimensions[cur_row].height = 22
-        r = cur_row
-        for col in range(1, NCOLS + 1):
-            ws.cell(row=r, column=col).fill = P(BG_CARD)
+        # Total row
+        ws.row_dimensions[r].height = 20
 
-        c = ws.cell(row=r, column=1)
-        c.value = f"  Total {sec_name.split()[-1].title()}"
-        c.font = F(accent, bold=True, size=10)
-        c.alignment = A("left","center")
+        cell = ws.cell(row=r, column=1, value=f"TOTAL")
+        style_cell(cell, bg=BG_MID, fg=ACCENT_GOLD, size=10, bold=True, align=align_left)
 
-        for col, fmt in [(2, '#,##0 "€"'), (3, '#,##0 "€"'), (4, '#,##0 "€"'), (5, "0%")]:
-            c = ws.cell(row=r, column=col)
-            col_l = get_column_letter(col)
-            if col <= 4:
-                c.value = f"=SUM({col_l}{data_start}:{col_l}{data_end})"
-                c.number_format = fmt
-            else:
-                c.value = f"=IF(B{r}=0,0,C{r}/B{r})"
-                c.number_format = fmt
-            c.font = F(accent, bold=True, size=10)
-            c.alignment = A("center","center")
+        cell = ws.cell(row=r, column=2, value=f"=SUM(B{first_cat}:B{last_cat})")
+        style_cell(cell, bg=BG_MID, fg=ACCENT_GOLD, size=10, bold=True,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-        # bar
-        c = ws.cell(row=r, column=6)
-        c.value = (f'=IF(B{r}=0,"",'
-                   f'REPT("▓",MIN(20,INT(C{r}/B{r}*20)))'
-                   f'&REPT("░",MAX(0,20-MIN(20,INT(C{r}/B{r}*20)))))')
-        c.font = Font(name="Courier New", color=accent, bold=True, size=9)
-        c.alignment = A("left","center")
+        cell = ws.cell(row=r, column=3, value=f"=SUM(C{first_cat}:C{last_cat})")
+        style_cell(cell, bg=BG_MID, fg=ACCENT_GOLD, size=10, bold=True,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-        section_totals[sec_name] = (f"B{r}", f"C{r}")
-        cur_row += 2  # gap
+        cell = ws.cell(row=r, column=4, value=f"=B{r}-C{r}")
+        style_cell(cell, bg=BG_MID, fg=ACCENT_GOLD, size=10, bold=True,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-    # ── Monthly summary block ──────────────────────────────────────────────────
-    cur_row += 1
-    ws.row_dimensions[cur_row].height = 28
-    ws.merge_cells(f"A{cur_row}:G{cur_row}")
-    c = ws.cell(row=cur_row, column=1)
-    c.value = "✦  BILAN DU MOIS"
-    c.fill = P(BG_CARD)
-    c.font = F(GOLD, bold=True, size=12)
-    c.alignment = A("center","center")
-    cur_row += 1
+        cell = ws.cell(row=r, column=5, value=f'=IF(B{r}=0,"—",C{r}/B{r})')
+        style_cell(cell, bg=BG_MID, fg=ACCENT_GOLD, size=10, bold=True,
+                   align=align_center, num_fmt='0%')
 
-    # Find total rows for each section
-    rev_b, rev_r = None, None
-    dep_b_refs, dep_r_refs = [], []
-    epa_r = None
+        for col in [6, 7]:
+            cell = ws.cell(row=r, column=col)
+            style_cell(cell, bg=BG_MID, fg=TEXT_WHITE)
 
-    for sec_name, (b_ref, r_ref) in section_totals.items():
-        if "REVENUS" in sec_name:
-            rev_b, rev_r = b_ref, r_ref
-        elif "ÉPARGNE" in sec_name:
-            epa_r = r_ref
-        elif "REVENUS" not in sec_name:
-            dep_b_refs.append(b_ref)
-            dep_r_refs.append(r_ref)
+        total_rows[sec_idx] = r
+        r += 1
 
-    summary_items = [
-        ("💰 Total Revenus", f"={rev_r}", SAGE),
-        ("💸 Total Dépenses", f"={'+'.join(dep_r_refs)}", TERRA),
-        ("📊 Solde du mois", f"={rev_r}-({'+'.join(dep_r_refs)})", MINT),
-        ("🎯 Taux d'épargne", f"=IF({rev_r}=0,0,({rev_r}-({'+'.join(dep_r_refs)}))/{rev_r})", GOLD),
-        ("🏦 Épargne réelle", f"={epa_r}", PINK),
+        # Blank spacer
+        ws.row_dimensions[r].height = 8
+        for col in range(1, 8):
+            cell = ws.cell(row=r, column=col)
+            cell.fill = fill(BG_DARK)
+        r += 1
+
+    # ── Summary block ──
+    r += 1  # extra gap
+
+    rev_total_r = total_rows[0]
+    fix_total_r = total_rows[1]
+    var_total_r = total_rows[2]
+    cre_total_r = total_rows[3]
+
+    # We need to know row numbers before writing formulas for Solde/Taux
+    rev_row   = r
+    dep_row   = r + 1
+    solde_row = r + 2
+    taux_row  = r + 3
+    obj_row   = r + 4
+
+    summary_data = [
+        (rev_row,   "Total Revenus",    f"=C{rev_total_r}",                                '#,##0.00 €', False),
+        (dep_row,   "Total Dépenses",   f"=C{fix_total_r}+C{var_total_r}+C{cre_total_r}", '#,##0.00 €', False),
+        (solde_row, "Solde du mois",    f"=C{rev_row}-C{dep_row}",                         '#,##0.00 €', True),
+        (taux_row,  "Taux d'épargne",   f'=IF(C{rev_row}=0,"—",C{solde_row}/C{rev_row})', '0%',         True),
+        (obj_row,   "Objectif Épargne", None,                                               '#,##0.00 €', False),
     ]
-    fmts = ['#,##0 "€"', '#,##0 "€"', '#,##0 "€"', "0%", '#,##0 "€"']
 
-    for (label, formula, color), fmt in zip(summary_items, fmts):
-        ws.row_dimensions[cur_row].height = 24
-        # label
-        c = ws.cell(row=cur_row, column=1)
-        c.value = label
-        c.fill = P(BG_MID)
-        c.font = F(color, bold=True, size=10)
-        c.alignment = A("left","center")
-        ws.merge_cells(f"A{cur_row}:E{cur_row}")
+    for row_n, label, formula, num_fmt, is_key in summary_data:
+        ws.row_dimensions[row_n].height = 22
+        bg = BG_CARD if is_key else BG_MID
+        fg = ACCENT_GOLD if is_key else TEXT_WHITE
 
-        c = ws.cell(row=cur_row, column=6)
-        c.value = formula
-        c.fill = P(BG_CARD)
-        c.font = F(color, bold=True, size=12)
-        c.alignment = A("center","center")
-        c.number_format = fmt
-        ws.merge_cells(f"F{cur_row}:G{cur_row}")
-        cur_row += 1
+        cell = ws.cell(row=row_n, column=1, value=label)
+        style_cell(cell, bg=bg, fg=fg, size=11, bold=is_key, align=align_left)
 
-    # store summary row indices for Dashboard references — write them as named ranges by convention
-    # we put the solde at row (cur_row-3) and revenus at (cur_row-5)
-    ws._focusdaily_summary = {
-        "revenus_row": cur_row - 5,
-        "depenses_row": cur_row - 4,
-        "solde_row": cur_row - 3,
-        "epargne_taux_row": cur_row - 2,
-        "epargne_reel_row": cur_row - 1,
+        # B: empty
+        cell = ws.cell(row=row_n, column=2)
+        style_cell(cell, bg=bg, fg=fg)
+
+        # C: value or input
+        if label == "Objectif Épargne":
+            cell = ws.cell(row=row_n, column=3)
+            style_cell(cell, bg=INPUT_YELLOW, fg=BG_DARK, size=11, bold=True,
+                       align=align_right, num_fmt=num_fmt)
+        else:
+            cell = ws.cell(row=row_n, column=3, value=formula)
+            style_cell(cell, bg=bg, fg=fg, size=11, bold=is_key,
+                       align=align_right, num_fmt=num_fmt)
+
+        for col in range(4, 8):
+            cell = ws.cell(row=row_n, column=col)
+            style_cell(cell, bg=bg, fg=fg)
+
+    ws.freeze_panes = "A3"
+
+    summary_rows = {
+        "Total Revenus":    rev_row,
+        "Total Dépenses":   dep_row,
+        "Solde du mois":    solde_row,
+        "Taux d'épargne":   taux_row,
+        "Objectif Épargne": obj_row,
     }
 
-    # Conditional formatting: ecart column D — red if negative
-    from openpyxl.formatting.rule import FormulaRule
-    red_fill = P("3D1515")
-    green_fill = P("0D2B1E")
-    ws.conditional_formatting.add(
-        f"D3:D{cur_row}",
-        FormulaRule(formula=["D3<0"], fill=red_fill, font=F(RED_SOFT))
-    )
-    ws.conditional_formatting.add(
-        f"D3:D{cur_row}",
-        FormulaRule(formula=["D3>0"], fill=green_fill, font=F(GREEN_SOFT))
-    )
+    return total_rows, summary_rows
 
-    return ws._focusdaily_summary
 
-# ── Build all monthly tabs ─────────────────────────────────────────────────────
-monthly_summaries = {}
-for i, (name_fr, name_en) in enumerate(zip(MONTHS_FR, MONTHS_EN)):
-    ws = wb.create_sheet(title=name_en)
-    summary = build_monthly(ws, i)
-    monthly_summaries[name_en] = summary
+# ══════════════════════════════════════════════════════════════════════════════
+# DASHBOARD
+# ══════════════════════════════════════════════════════════════════════════════
 
-# ── Guide tab ─────────────────────────────────────────────────────────────────
-ws_guide = wb.create_sheet(title="Guide", index=0)
-ws_guide.sheet_view.showGridLines = False
-ws_guide.sheet_properties.tabColor = GOLD
-ws_guide.column_dimensions["A"].width = 3
-ws_guide.column_dimensions["B"].width = 60
+def build_dashboard(ws, month_total_rows_map, month_summary_rows_map):
+    ws.sheet_view.showGridLines = False
+    ws.sheet_properties.tabColor = ACCENT_GOLD
 
-for r in range(1, 50):
-    for c in range(1, 4):
-        ws_guide.cell(row=r, column=c).fill = P(BG_DARK)
+    set_col_widths(ws, {
+        "A": 22, "B": 18, "C": 18, "D": 18,
+        "E": 18, "F": 18, "G": 18, "H": 18,
+        "I": 4,
+        "J": 14, "K": 16, "L": 16, "M": 16
+    })
 
-ws_guide.row_dimensions[2].height = 50
-ws_guide.merge_cells("B2:C2")
-c = ws_guide.cell(row=2, column=2)
-c.value = "✦  BUDGET PRO  ✦"
-c.fill = P(BG_CARD)
-c.font = F(GOLD, bold=True, size=22)
-c.alignment = A("center","center")
+    # Row 1: title
+    ws.row_dimensions[1].height = 40
+    merge_title(ws, "A1:H1", "📊 TABLEAU DE BORD ANNUEL", BG_CARD,
+                size=20, bold=True)
 
-ws_guide.row_dimensions[3].height = 20
-ws_guide.merge_cells("B3:C3")
-c = ws_guide.cell(row=3, column=2)
-c.value = "Votre tracker financier personnel — élégant, intelligent, efficace"
-c.fill = P(BG_MID)
-c.font = F(MUTED, italic=True, size=10)
-c.alignment = A("center","center")
+    # Apply dark bg to visible range
+    for row in ws.iter_rows(min_row=1, max_row=50, min_col=1, max_col=9):
+        for cell in row:
+            if cell.row == 1 and 1 <= cell.column <= 8:
+                pass  # already handled by merge_title
+            else:
+                cell.fill = fill(BG_DARK)
 
-guide_content = [
-    ("", ""),
-    ("🚀 DÉMARRAGE RAPIDE", ""),
-    ("1.", "Ouvre l'onglet du mois en cours (ex: Janvier)"),
-    ("2.", "Saisis tes budgets prévus en colonne B pour chaque catégorie"),
-    ("3.", "Chaque semaine, mets à jour la colonne C avec les montants réels"),
-    ("4.", "Les colonnes D, E, F et G se calculent automatiquement"),
-    ("", ""),
-    ("🎨 CODE COULEURS", ""),
-    ("🟢", "Moins de 80% du budget utilisé — tu gères !"),
-    ("🟡", "Entre 80% et 100% — sois vigilant(e)"),
-    ("🔴", "Budget dépassé — action requise"),
-    ("⬜", "Rien de saisi"),
-    ("", ""),
-    ("📊 SECTIONS DU MOIS", ""),
-    ("💰", "REVENUS — tous tes revenus du mois"),
-    ("🏠", "DÉPENSES FIXES — charges incompressibles"),
-    ("🛒", "DÉPENSES VARIABLES — dépenses du quotidien"),
-    ("💳", "CRÉDITS — remboursements en cours"),
-    ("🏦", "ÉPARGNE — ce que tu mets de côté"),
-    ("", ""),
-    ("📈 DASHBOARD", "Onglet récapitulatif annuel — graphiques et KPIs générés automatiquement"),
-    ("", ""),
-    ("💡 ASTUCE", "Personnalise les noms de catégories directement dans les cellules"),
-]
+    # ── Helper data table: rows 5-18, cols J-M ──
+    helper_start = 5
 
-r = 5
-for icon, text in guide_content:
-    ws_guide.row_dimensions[r].height = 20
-    c1 = ws_guide.cell(row=r, column=2)
-    c1.value = icon
-    c1.fill = P(BG_DARK)
+    ws.row_dimensions[helper_start].height = 18
+    h_headers = ["Mois", "Revenus", "Dépenses", "Solde"]
+    for col_idx, hdr in enumerate(h_headers, start=10):
+        cell = ws.cell(row=helper_start, column=col_idx, value=hdr)
+        style_cell(cell, bg=BG_CARD, fg=TEXT_WHITE, size=10, bold=True, align=align_center)
 
-    if not text and icon:
-        # section header
-        c1.font = F(GOLD, bold=True, size=11)
-        c1.alignment = A("left","center")
-    else:
-        c1.font = F(WHITE, size=10)
-        c1.alignment = A("center","center")
+    for m_idx, (month_key, month_display) in enumerate(zip(MONTHS, MONTHS_DISPLAY)):
+        hr = helper_start + 1 + m_idx
+        ws.row_dimensions[hr].height = 18
 
-    c2 = ws_guide.cell(row=r, column=3)
-    c2.value = text
-    c2.fill = P(BG_DARK)
-    c2.font = F(WHITE, size=10) if text else F(GOLD, bold=True, size=11)
-    c2.alignment = A("left","center")
-    r += 1
+        s_rows = month_summary_rows_map[month_key]
+        rev_sr   = s_rows["Total Revenus"]
+        dep_sr   = s_rows["Total Dépenses"]
+        solde_sr = s_rows["Solde du mois"]
 
-ws_guide.column_dimensions["C"].width = 55
+        cell = ws.cell(row=hr, column=10, value=month_display)
+        style_cell(cell, bg=BG_MID, fg=TEXT_WHITE, size=10, align=align_center)
 
-# ── Dashboard tab ──────────────────────────────────────────────────────────────
-ws_dash = wb.create_sheet(title="Dashboard")
-ws_dash.sheet_view.showGridLines = False
-ws_dash.sheet_properties.tabColor = GOLD
+        cell = ws.cell(row=hr, column=11, value=f"='{month_key}'!C{rev_sr}")
+        style_cell(cell, bg=BG_MID, fg=TEXT_WHITE, size=10,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-for r in range(1, 80):
-    for c in range(1, 10):
-        ws_dash.cell(row=r, column=c).fill = P(BG_DARK)
+        cell = ws.cell(row=hr, column=12, value=f"='{month_key}'!C{dep_sr}")
+        style_cell(cell, bg=BG_MID, fg=TEXT_WHITE, size=10,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-# column widths
-col_widths_dash = [2, 22, 2, 22, 2, 22, 2, 22, 2]
-for i, w in enumerate(col_widths_dash, 1):
-    ws_dash.column_dimensions[get_column_letter(i)].width = w
+        cell = ws.cell(row=hr, column=13, value=f"='{month_key}'!C{solde_sr}")
+        style_cell(cell, bg=BG_MID, fg=TEXT_WHITE, size=10,
+                   align=align_right, num_fmt='#,##0.00 €')
 
-# Title
-ws_dash.row_dimensions[2].height = 50
-ws_dash.merge_cells("B2:H2")
-c = ws_dash.cell(row=2, column=2)
-c.value = "✦  VUE ANNUELLE — DASHBOARD  ✦"
-c.fill = P(BG_CARD)
-c.font = F(GOLD, bold=True, size=18)
-c.alignment = A("center","center")
+    data_start = helper_start + 1
+    data_end   = helper_start + 12
 
-# Sub
-ws_dash.row_dimensions[3].height = 20
-ws_dash.merge_cells("B3:H3")
-c = ws_dash.cell(row=3, column=2)
-c.value = "Synthèse automatique de vos 12 mois"
-c.fill = P(BG_MID)
-c.font = F(MUTED, italic=True, size=10)
-c.alignment = A("center","center")
+    k_rng = f"K{data_start}:K{data_end}"
+    l_rng = f"L{data_start}:L{data_end}"
+    m_rng = f"M{data_start}:M{data_end}"
+    j_rng = f"J{data_start}:J{data_end}"
 
-# ── KPI Cards ─────────────────────────────────────────────────────────────────
-# We need to reference the summary rows from each monthly tab.
-# Each month tab has a "BILAN DU MOIS" block. We'll use the row numbers stored.
-# For simplicity, build a helper sheet "Data_Dash" with aggregated data
-ws_data = wb.create_sheet(title="Data_Dash")
-ws_data.sheet_view.showGridLines = False
-ws_data.sheet_properties.tabColor = BG_DARK
+    # ── KPI Cards ──
+    # Layout: 4 cards in row 2-3, 2 cards in row 4
+    # Each card: label row + value row, 2 cols wide
+    kpi_cards = [
+        ("💰 Revenus Annuels",    f"=SUM({k_rng})",                                        '#,##0.00 €', "A", "B"),
+        ("💸 Total Dépenses",     f"=SUM({l_rng})",                                        '#,##0.00 €', "C", "D"),
+        ("✅ Solde Annuel",       f"=SUM({m_rng})",                                        '#,##0.00 €', "E", "F"),
+        ("📈 Taux Épargne Moyen", f'=IF(SUM({k_rng})=0,"—",SUM({m_rng})/SUM({k_rng}))',   '0%',         "G", "H"),
+    ]
 
-# Build aggregation table in Data_Dash
-ws_data.cell(row=1, column=1).value = "Mois"
-ws_data.cell(row=1, column=2).value = "Revenus"
-ws_data.cell(row=1, column=3).value = "Dépenses"
-ws_data.cell(row=1, column=4).value = "Solde"
-ws_data.cell(row=1, column=5).value = "Épargne"
+    ws.row_dimensions[2].height = 18
+    ws.row_dimensions[3].height = 30
 
-for i, (name_fr, name_en) in enumerate(zip(MONTHS_FR, MONTHS_EN)):
-    row = i + 2
-    s = monthly_summaries[name_en]
-    ws_data.cell(row=row, column=1).value = name_fr
-    ws_data.cell(row=row, column=2).value = f"='{name_en}'!F{s['revenus_row']}"
-    ws_data.cell(row=row, column=3).value = f"='{name_en}'!F{s['depenses_row']}"
-    ws_data.cell(row=row, column=4).value = f"='{name_en}'!F{s['solde_row']}"
-    ws_data.cell(row=row, column=5).value = f"='{name_en}'!F{s['epargne_reel_row']}"
-    for c in range(1, 6):
-        ws_data.cell(row=row, column=c).number_format = '#,##0 "€"'
+    for label, formula, num_fmt, col_s, col_e in kpi_cards:
+        # Label row (row 2)
+        ws.merge_cells(f"{col_s}2:{col_e}2")
+        cell = ws[f"{col_s}2"]
+        cell.value = label
+        style_cell(cell, bg=BG_MID, fg=TEXT_MUTED, size=10, align=align_center, border=False)
 
-# KPIs on Dashboard
-kpi_data = [
-    ("💰 Revenus annuels",  "=SUM(Data_Dash!B2:B13)", '#,##0 "€"', SAGE,  "B5", "C6"),
-    ("💸 Total dépenses",   "=SUM(Data_Dash!C2:C13)", '#,##0 "€"', TERRA, "D5", "E6"),
-    ("📊 Solde annuel",     "=SUM(Data_Dash!D2:D13)", '#,##0 "€"', MINT,  "F5", "G6"),
-    ("🏦 Épargne totale",   "=SUM(Data_Dash!E2:E13)", '#,##0 "€"', PINK,  "B8", "C9"),
-    ("📈 Taux épargne moy", "=IFERROR(SUM(Data_Dash!D2:D13)/SUM(Data_Dash!B2:B13),0)", "0%", GOLD, "D8", "E9"),
-    ("🏆 Meilleur mois",    "=MAX(Data_Dash!D2:D13)", '#,##0 "€"', GREEN_SOFT, "F8", "G9"),
-]
+        # Value row (row 3)
+        ws.merge_cells(f"{col_s}3:{col_e}3")
+        cell = ws[f"{col_s}3"]
+        cell.value = formula
+        style_cell(cell, bg=BG_CARD, fg=ACCENT_GOLD, size=14, bold=True,
+                   align=align_center, num_fmt=num_fmt, border=False)
 
-for label, formula, fmt, color, anchor_label, anchor_val in kpi_data:
-    from openpyxl.utils import column_index_from_string
-    r_s = int(anchor_label[1:])
-    c_s = column_index_from_string(anchor_label[0])
-    r_e = int(anchor_val[1:])
-    c_e = column_index_from_string(anchor_val[0])
+    # Two wide KPI cards in row 4
+    ws.row_dimensions[4].height = 28
 
-    ws_dash.row_dimensions[r_s].height = 22
-    ws_dash.row_dimensions[r_e].height = 32
+    best_formula  = f"=IFERROR(INDEX({j_rng},MATCH(MAX({m_rng}),{m_rng},0)),\"N/A\")"
+    worst_formula = f"=IFERROR(INDEX({j_rng},MATCH(MIN({m_rng}),{m_rng},0)),\"N/A\")"
 
-    ws_dash.merge_cells(start_row=r_s, start_column=c_s, end_row=r_s, end_column=c_e)
-    c = ws_dash.cell(row=r_s, column=c_s)
-    c.value = label
-    c.fill = P(BG_MID)
-    c.font = F(MUTED, size=9)
-    c.alignment = A("center","center")
+    ws.merge_cells("A4:B4")
+    cell = ws["A4"]
+    cell.value = "🏆 Meilleur Mois"
+    style_cell(cell, bg=BG_MID, fg=TEXT_MUTED, size=10, align=align_center, border=False)
 
-    ws_dash.merge_cells(start_row=r_e, start_column=c_s, end_row=r_e, end_column=c_e)
-    c = ws_dash.cell(row=r_e, column=c_s)
-    c.value = formula
-    c.fill = P(BG_CARD)
-    c.font = F(color, bold=True, size=14)
-    c.alignment = A("center","center")
-    c.number_format = fmt
+    ws.merge_cells("C4:D4")
+    cell = ws["C4"]
+    cell.value = best_formula
+    style_cell(cell, bg=BG_CARD, fg=ACCENT_GOLD, size=13, bold=True,
+               align=align_center, border=False)
 
-# ── Monthly table on dashboard ─────────────────────────────────────────────────
-r = 12
-ws_dash.row_dimensions[r].height = 26
-ws_dash.merge_cells(f"B{r}:H{r}")
-c = ws_dash.cell(row=r, column=2)
-c.value = "📅  ÉVOLUTION MENSUELLE"
-c.fill = P(BG_MID)
-c.font = F(GOLD, bold=True, size=11)
-c.alignment = A("left","center")
-r += 1
+    ws.merge_cells("E4:F4")
+    cell = ws["E4"]
+    cell.value = "⚠️ Pire Mois"
+    style_cell(cell, bg=BG_MID, fg=TEXT_MUTED, size=10, align=align_center, border=False)
 
-# Header
-headers = ["Mois","Revenus","Dépenses","Solde","Épargne","Bilan"]
-hcols = [2, 3, 4, 5, 6, 7]
-ws_dash.row_dimensions[r].height = 20
-for h, col in zip(headers, hcols):
-    c = ws_dash.cell(row=r, column=col)
-    c.value = h
-    c.fill = P(BG_CARD)
-    c.font = F(MUTED, bold=True, size=9)
-    c.alignment = A("center","center")
-r += 1
+    ws.merge_cells("G4:H4")
+    cell = ws["G4"]
+    cell.value = worst_formula
+    style_cell(cell, bg=BG_CARD, fg=ACCENT_TERRA, size=13, bold=True,
+               align=align_center, border=False)
 
-table_start = r
-for i, (name_fr, name_en) in enumerate(zip(MONTHS_FR, MONTHS_EN)):
-    ws_dash.row_dimensions[r].height = 20
-    bg = P(BG_ROW) if i % 2 == 0 else P(BG_DARK)
+    # ── Bar Chart ──
+    chart = BarChart()
+    chart.type = "col"
+    chart.title = "Revenus vs Dépenses par Mois"
+    chart.y_axis.title = "Montant (€)"
+    chart.x_axis.title = "Mois"
+    chart.style = 10
+    chart.width = 24
+    chart.height = 14
+    chart.grouping = "clustered"
 
-    c = ws_dash.cell(row=r, column=2)
-    c.value = name_fr
-    c.fill = bg; c.font = F(WHITE, size=10); c.alignment = A("left","center")
+    cats = Reference(ws, min_col=10, min_row=data_start, max_row=data_end)
 
-    for col, col_letter, color in [(3,"B",SAGE),(4,"C",TERRA),(5,"D",MINT),(6,"E",PINK)]:
-        cell = ws_dash.cell(row=r, column=col)
-        cell.value = f"=Data_Dash!{col_letter}{i+2}"
-        cell.fill = bg; cell.font = F(color, size=10); cell.alignment = A("center","center")
-        cell.number_format = '#,##0 "€"'
+    rev_ref = Reference(ws, min_col=11, min_row=data_start - 1,
+                        max_col=11, max_row=data_end)
+    rev_s = Series(rev_ref, title_from_data=True)
+    rev_s.graphicalProperties.solidFill = ACCENT_SAGE
 
-    # bilan bar
-    cell = ws_dash.cell(row=r, column=7)
-    d_col = get_column_letter(5)  # solde col
-    cell.value = f'=IF(E{r}>=0,"🟢 +"&TEXT(E{r},"#,##0")&" €","🔴 "&TEXT(E{r},"#,##0")&" €")'
-    cell.fill = bg; cell.font = F(WHITE, size=9); cell.alignment = A("center","center")
+    dep_ref = Reference(ws, min_col=12, min_row=data_start - 1,
+                        max_col=12, max_row=data_end)
+    dep_s = Series(dep_ref, title_from_data=True)
+    dep_s.graphicalProperties.solidFill = ACCENT_TERRA
 
-    r += 1
+    chart.series.append(rev_s)
+    chart.series.append(dep_s)
+    chart.set_categories(cats)
 
-table_end = r - 1
+    ws.add_chart(chart, "A20")
 
-# Total row
-ws_dash.row_dimensions[r].height = 24
-for col in range(2, 9):
-    ws_dash.cell(row=r, column=col).fill = P(BG_CARD)
-c = ws_dash.cell(row=r, column=2)
-c.value = "TOTAL ANNUEL"
-c.font = F(GOLD, bold=True, size=10)
-c.alignment = A("left","center")
-for col, col_letter, color in [(3,"B",SAGE),(4,"C",TERRA),(5,"D",MINT),(6,"E",PINK)]:
-    cell = ws_dash.cell(row=r, column=col)
-    cell.value = f"=SUM(Data_Dash!{col_letter}2:Data_Dash!{col_letter}13)"
-    cell.fill = P(BG_CARD)
-    cell.font = F(color, bold=True, size=10)
-    cell.alignment = A("center","center")
-    cell.number_format = '#,##0 "€"'
-r += 2
 
-# ── Bar Chart: Revenus vs Dépenses ─────────────────────────────────────────────
-chart = BarChart()
-chart.type = "col"
-chart.grouping = "clustered"
-chart.title = "Revenus vs Dépenses par mois"
-chart.style = 10
-chart.y_axis.title = "Montant (€)"
-chart.x_axis.title = "Mois"
-chart.shape = 4
-chart.width = 18
-chart.height = 12
+# ══════════════════════════════════════════════════════════════════════════════
+# TRANSACTIONS TAB
+# ══════════════════════════════════════════════════════════════════════════════
 
-# data from Data_Dash cols B (revenus) and C (depenses)
-data_rev = Reference(ws_data, min_col=2, max_col=3, min_row=1, max_row=13)
-cats = Reference(ws_data, min_col=1, min_row=2, max_row=13)
-chart.add_data(data_rev, titles_from_data=True)
-chart.set_categories(cats)
-chart.series[0].graphicalProperties.solidFill = SAGE
-chart.series[1].graphicalProperties.solidFill = TERRA
-ws_dash.add_chart(chart, f"B{r}")
+def build_transactions(ws):
+    ws.sheet_view.showGridLines = False
+    ws.sheet_properties.tabColor = ACCENT_SAGE
 
-# ── Pie Chart: Dépenses annuelles par catégorie ────────────────────────────────
-# build a mini aggregation for pie (5 sections)
-ws_data.cell(row=16, column=7).value = "Section"
-ws_data.cell(row=16, column=8).value = "Total annuel"
-pie_sections = [
-    ("Dépenses fixes", FIXES_CATS),
-    ("Dépenses variables", VARIABLES_CATS),
-    ("Crédits", CREDITS_CATS),
-    ("Épargne", EPARGNE_CATS),
-]
-for j, (label, cats_list) in enumerate(pie_sections):
-    row_p = 17 + j
-    ws_data.cell(row=row_p, column=7).value = label
-    # sum cat rows across all months
-    ws_data.cell(row=row_p, column=8).value = f"=SUM(Data_Dash!C2:C13)*0"  # placeholder; simplified
+    set_col_widths(ws, {
+        "A": 14, "B": 30, "C": 20, "D": 14, "E": 12, "F": 14
+    })
 
-# simplified: just use 4 rows with manually split
-n_fixes = len(FIXES_CATS)
-n_vars = len(VARIABLES_CATS)
-n_creds = len(CREDITS_CATS)
-n_epar = len(EPARGNE_CATS)
-total_cats = n_fixes + n_vars + n_creds + n_epar
+    ws.row_dimensions[1].height = 36
+    merge_title(ws, "A1:F1", "💳 JOURNAL DES TRANSACTIONS", BG_CARD,
+                size=16, bold=True)
 
-for j, (label, frac) in enumerate([("Dépenses fixes", n_fixes), ("Dépenses variables", n_vars),
-                                     ("Crédits", n_creds), ("Épargne", n_epar)]):
-    row_p = 17 + j
-    ws_data.cell(row=row_p, column=7).value = label
-    ws_data.cell(row=row_p, column=8).value = f"=SUM(Data_Dash!C2:C13)*{frac}/{total_cats}"
-    ws_data.cell(row=row_p, column=8).number_format = '#,##0 "€"'
+    ws.row_dimensions[2].height = 22
+    headers = ["Date", "Description", "Catégorie", "Montant", "Type", "Mois"]
+    for col_idx, hdr in enumerate(headers, start=1):
+        cell = ws.cell(row=2, column=col_idx, value=hdr)
+        style_cell(cell, bg=BG_MID, fg=TEXT_WHITE, size=11, bold=True, align=align_center)
 
-pie = PieChart()
-pie.title = "Répartition des dépenses"
-pie.style = 10
-pie.width = 14
-pie.height = 12
+    for i in range(50):
+        r = 3 + i
+        ws.row_dimensions[r].height = 18
+        bg = BG_DARK if i % 2 == 0 else BG_MID
+        for col in range(1, 7):
+            cell = ws.cell(row=r, column=col)
+            al = align_right if col == 4 else align_center
+            nm = '#,##0.00 €' if col == 4 else None
+            style_cell(cell, bg=bg, fg=TEXT_WHITE, size=10, align=al, num_fmt=nm)
 
-pie_data = Reference(ws_data, min_col=8, min_row=16, max_row=20)
-pie_cats = Reference(ws_data, min_col=7, min_row=17, max_row=20)
-pie.add_data(pie_data, titles_from_data=True)
-pie.set_categories(pie_cats)
+    ws.freeze_panes = "A3"
 
-colors_pie = [TERRA, GOLD, MINT, PINK]
-for k, color in enumerate(colors_pie):
-    dp = pie.series[0].dPt
-    from openpyxl.chart.data_source import NumDataSource
-    from openpyxl.chart.series import DataPoint
-    pt = DataPoint(idx=k)
-    pt.spPr.solidFill = color
-    pie.series[0].dPt.append(pt)
 
-ws_dash.add_chart(pie, f"F{r}")
+# ══════════════════════════════════════════════════════════════════════════════
+# GUIDE TAB
+# ══════════════════════════════════════════════════════════════════════════════
 
-# ── Save ───────────────────────────────────────────────────────────────────────
-out_path = os.path.join(os.path.dirname(__file__), "BudgetPro-Style.xlsx")
-wb.save(out_path)
-print(f"✅  Fichier créé : {out_path}")
-print(f"    Onglets : {len(wb.sheetnames)}")
-for s in wb.sheetnames:
-    print(f"    • {s}")
+def build_guide(ws):
+    ws.sheet_view.showGridLines = False
+    ws.sheet_properties.tabColor = ACCENT_TERRA
+
+    ws.column_dimensions["A"].width = 5
+    ws.column_dimensions["B"].width = 50
+    ws.column_dimensions["C"].width = 5
+    ws.column_dimensions["D"].width = 30
+
+    ws.row_dimensions[1].height = 36
+    merge_title(ws, "A1:D1", "📖 GUIDE D'UTILISATION", BG_CARD,
+                size=16, bold=True)
+
+    guide_content = [
+        ("🚀 DÉMARRAGE RAPIDE", True),
+        ("1. Sélectionnez l'onglet du mois en cours (ex: Janvier)", False),
+        ("2. Remplissez les cellules jaunes (Budget Prévu et Réel)", False),
+        ("3. Les formules calculent automatiquement les écarts et %", False),
+        ("4. Consultez le tableau de bord pour une vue annuelle", False),
+        ("", False),
+        ("💰 ONGLETS MENSUELS", True),
+        ("• Colonnes jaunes = saisie utilisateur uniquement", False),
+        ("• Colonne D (Écart) = Budget - Réel (auto)", False),
+        ("• Colonne E (%) = Réel / Budget en pourcentage (auto)", False),
+        ("• Colonne F = Barre de progression visuelle (auto)", False),
+        ("• 🟢 = sous 80% du budget | 🟡 = 80-100% | 🔴 = dépassement", False),
+        ("", False),
+        ("📊 TABLEAU DE BORD", True),
+        ("• Se met à jour automatiquement depuis les onglets mensuels", False),
+        ("• Le graphique compare revenus vs dépenses sur l'année", False),
+        ("• Identifie le meilleur et le pire mois automatiquement", False),
+        ("", False),
+        ("💳 JOURNAL DES TRANSACTIONS", True),
+        ("• Saisissez chaque dépense/revenu au fil de l'eau", False),
+        ("• Utilisez le champ Mois pour filtrer par période", False),
+        ("", False),
+        ("⚠️ CONSEILS IMPORTANTS", True),
+        ("• Sauvegardez régulièrement votre fichier", False),
+        ("• Ne supprimez pas les formules dans les colonnes D, E, F, G", False),
+    ]
+
+    for i, (text, is_header) in enumerate(guide_content):
+        r = 2 + i
+        ws.row_dimensions[r].height = 20 if is_header else 18
+        bg = BG_CARD if is_header else BG_DARK
+        fg = ACCENT_GOLD if is_header else TEXT_WHITE
+        ws.merge_cells(f"A{r}:D{r}")
+        cell = ws[f"A{r}"]
+        cell.value = text
+        cell.fill = fill(bg)
+        cell.font = Font(color=fg, size=11 if is_header else 10,
+                         bold=is_header, name="Calibri")
+        cell.alignment = align_left
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MAIN
+# ══════════════════════════════════════════════════════════════════════════════
+
+def main():
+    output_dir  = "/home/user/claude-code/output"
+    output_path = os.path.join(output_dir, "BudgetPro-Style.xlsx")
+    os.makedirs(output_dir, exist_ok=True)
+
+    wb = Workbook()
+    wb.remove(wb.active)
+
+    month_total_rows_map   = {}
+    month_summary_rows_map = {}
+
+    for month_key, month_display in zip(MONTHS, MONTHS_DISPLAY):
+        ws = wb.create_sheet(title=month_key)
+        ws.sheet_properties.tabColor = BG_CARD
+        total_rows, summary_rows = build_monthly(ws, month_key, month_display)
+        month_total_rows_map[month_key]   = total_rows
+        month_summary_rows_map[month_key] = summary_rows
+
+    ws_dash = wb.create_sheet(title="Dashboard")
+    build_dashboard(ws_dash, month_total_rows_map, month_summary_rows_map)
+
+    ws_trans = wb.create_sheet(title="Transactions")
+    build_transactions(ws_trans)
+
+    ws_guide = wb.create_sheet(title="Guide")
+    build_guide(ws_guide)
+
+    wb.save(output_path)
+    print(f"File saved: {output_path}")
+
+
+if __name__ == "__main__":
+    main()
