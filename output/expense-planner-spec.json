@@ -1,0 +1,1632 @@
+{
+  "title": "Planner Suivi de Dépenses Annuel",
+  "theme": "default",
+  "tabs": [
+    {
+      "name": "Guide",
+      "columns": [
+        {
+          "header": "📊 Suivi de Dépenses — Mode d'emploi",
+          "key": "g",
+          "width": 620,
+          "format": "@"
+        }
+      ],
+      "rows": [
+        {
+          "g": "Bienvenue ! Ce classeur suit vos dépenses mois par mois."
+        },
+        {
+          "g": "1. Onglet 'Revenus' : saisissez vos revenus et objectif d'épargne par mois."
+        },
+        {
+          "g": "2. Onglets mensuels (Janvier…Décembre) : entrez le montant 'Dépensé réel' par catégorie."
+        },
+        {
+          "g": "3. La colonne Écart et % utilisé se calculent automatiquement."
+        },
+        {
+          "g": "4. L'onglet 'Dashboard' affiche vos totaux annuels et graphiques — rien à remplir."
+        },
+        {
+          "g": "Astuce : modifiez les budgets prévus selon votre situation. Les couleurs signalent les dépassements."
+        },
+        {
+          "g": "Bon suivi ! 💚"
+        }
+      ]
+    },
+    {
+      "name": "Revenus",
+      "columns": [
+        {
+          "header": "Mois",
+          "key": "mois",
+          "width": 130,
+          "format": "@"
+        },
+        {
+          "header": "Revenus",
+          "key": "rev",
+          "width": 130,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Objectif épargne",
+          "key": "obj",
+          "width": 150,
+          "format": "#,##0 €"
+        }
+      ],
+      "rows": [
+        {
+          "mois": "Janvier",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Février",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Mars",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Avril",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Mai",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Juin",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Juillet",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Août",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Septembre",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Octobre",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Novembre",
+          "rev": 0,
+          "obj": 0
+        },
+        {
+          "mois": "Décembre",
+          "rev": 0,
+          "obj": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "rev": "=SUM(B{firstrow}:B{lastrow})",
+          "obj": "=SUM(C{firstrow}:C{lastrow})"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      }
+    },
+    {
+      "name": "Janvier",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Fevrier",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Mars",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Avril",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Mai",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Juin",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Juillet",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Aout",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Septembre",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Octobre",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Novembre",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Decembre",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 150,
+          "format": "@"
+        },
+        {
+          "header": "Budget prévu",
+          "key": "budget",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé réel",
+          "key": "reel",
+          "width": 120,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Écart",
+          "key": "ecart",
+          "width": 110,
+          "format": "#,##0 €",
+          "formula": "=B{row}-C{row}"
+        },
+        {
+          "header": "% utilisé",
+          "key": "pct",
+          "width": 100,
+          "format": "0%",
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "budget": 900,
+          "reel": 0
+        },
+        {
+          "cat": "Alimentation",
+          "budget": 450,
+          "reel": 0
+        },
+        {
+          "cat": "Transport",
+          "budget": 200,
+          "reel": 0
+        },
+        {
+          "cat": "Santé",
+          "budget": 100,
+          "reel": 0
+        },
+        {
+          "cat": "Loisirs",
+          "budget": 150,
+          "reel": 0
+        },
+        {
+          "cat": "Abonnements",
+          "budget": 60,
+          "reel": 0
+        },
+        {
+          "cat": "Shopping",
+          "budget": 120,
+          "reel": 0
+        },
+        {
+          "cat": "Autre",
+          "budget": 80,
+          "reel": 0
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})",
+          "ecart": "=SUM(D{firstrow}:D{lastrow})",
+          "pct": "=IF(SUM(B{firstrow}:B{lastrow})=0,0,SUM(C{firstrow}:C{lastrow})/SUM(B{firstrow}:B{lastrow}))"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      },
+      "conditional_formats": [
+        {
+          "range": "D{firstrow}:D{lastrow}",
+          "type": "color_scale",
+          "min": "#D4876B",
+          "mid": "#F5EFE6",
+          "max": "#5C7A6B"
+        },
+        {
+          "range": "E{firstrow}:E{lastrow}",
+          "type": "data_bar",
+          "color": "#5C7A6B"
+        }
+      ]
+    },
+    {
+      "name": "Resume_Mensuel",
+      "columns": [
+        {
+          "header": "Mois",
+          "key": "mois",
+          "width": 130,
+          "format": "@"
+        },
+        {
+          "header": "Budget",
+          "key": "budget",
+          "width": 130,
+          "format": "#,##0 €"
+        },
+        {
+          "header": "Dépensé",
+          "key": "reel",
+          "width": 130,
+          "format": "#,##0 €"
+        }
+      ],
+      "rows": [
+        {
+          "mois": "Janvier",
+          "budget": "='Janvier'!B10",
+          "reel": "='Janvier'!C10"
+        },
+        {
+          "mois": "Février",
+          "budget": "='Fevrier'!B10",
+          "reel": "='Fevrier'!C10"
+        },
+        {
+          "mois": "Mars",
+          "budget": "='Mars'!B10",
+          "reel": "='Mars'!C10"
+        },
+        {
+          "mois": "Avril",
+          "budget": "='Avril'!B10",
+          "reel": "='Avril'!C10"
+        },
+        {
+          "mois": "Mai",
+          "budget": "='Mai'!B10",
+          "reel": "='Mai'!C10"
+        },
+        {
+          "mois": "Juin",
+          "budget": "='Juin'!B10",
+          "reel": "='Juin'!C10"
+        },
+        {
+          "mois": "Juillet",
+          "budget": "='Juillet'!B10",
+          "reel": "='Juillet'!C10"
+        },
+        {
+          "mois": "Août",
+          "budget": "='Aout'!B10",
+          "reel": "='Aout'!C10"
+        },
+        {
+          "mois": "Septembre",
+          "budget": "='Septembre'!B10",
+          "reel": "='Septembre'!C10"
+        },
+        {
+          "mois": "Octobre",
+          "budget": "='Octobre'!B10",
+          "reel": "='Octobre'!C10"
+        },
+        {
+          "mois": "Novembre",
+          "budget": "='Novembre'!B10",
+          "reel": "='Novembre'!C10"
+        },
+        {
+          "mois": "Décembre",
+          "budget": "='Decembre'!B10",
+          "reel": "='Decembre'!C10"
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "budget": "=SUM(B{firstrow}:B{lastrow})",
+          "reel": "=SUM(C{firstrow}:C{lastrow})"
+        }
+      },
+      "freeze": {
+        "rows": 1,
+        "cols": 1
+      }
+    },
+    {
+      "name": "Resume_Cat",
+      "columns": [
+        {
+          "header": "Catégorie",
+          "key": "cat",
+          "width": 160,
+          "format": "@"
+        },
+        {
+          "header": "Total annuel",
+          "key": "total",
+          "width": 140,
+          "format": "#,##0 €"
+        }
+      ],
+      "rows": [
+        {
+          "cat": "Logement",
+          "total": "='Janvier'!C2+'Fevrier'!C2+'Mars'!C2+'Avril'!C2+'Mai'!C2+'Juin'!C2+'Juillet'!C2+'Aout'!C2+'Septembre'!C2+'Octobre'!C2+'Novembre'!C2+'Decembre'!C2"
+        },
+        {
+          "cat": "Alimentation",
+          "total": "='Janvier'!C3+'Fevrier'!C3+'Mars'!C3+'Avril'!C3+'Mai'!C3+'Juin'!C3+'Juillet'!C3+'Aout'!C3+'Septembre'!C3+'Octobre'!C3+'Novembre'!C3+'Decembre'!C3"
+        },
+        {
+          "cat": "Transport",
+          "total": "='Janvier'!C4+'Fevrier'!C4+'Mars'!C4+'Avril'!C4+'Mai'!C4+'Juin'!C4+'Juillet'!C4+'Aout'!C4+'Septembre'!C4+'Octobre'!C4+'Novembre'!C4+'Decembre'!C4"
+        },
+        {
+          "cat": "Santé",
+          "total": "='Janvier'!C5+'Fevrier'!C5+'Mars'!C5+'Avril'!C5+'Mai'!C5+'Juin'!C5+'Juillet'!C5+'Aout'!C5+'Septembre'!C5+'Octobre'!C5+'Novembre'!C5+'Decembre'!C5"
+        },
+        {
+          "cat": "Loisirs",
+          "total": "='Janvier'!C6+'Fevrier'!C6+'Mars'!C6+'Avril'!C6+'Mai'!C6+'Juin'!C6+'Juillet'!C6+'Aout'!C6+'Septembre'!C6+'Octobre'!C6+'Novembre'!C6+'Decembre'!C6"
+        },
+        {
+          "cat": "Abonnements",
+          "total": "='Janvier'!C7+'Fevrier'!C7+'Mars'!C7+'Avril'!C7+'Mai'!C7+'Juin'!C7+'Juillet'!C7+'Aout'!C7+'Septembre'!C7+'Octobre'!C7+'Novembre'!C7+'Decembre'!C7"
+        },
+        {
+          "cat": "Shopping",
+          "total": "='Janvier'!C8+'Fevrier'!C8+'Mars'!C8+'Avril'!C8+'Mai'!C8+'Juin'!C8+'Juillet'!C8+'Aout'!C8+'Septembre'!C8+'Octobre'!C8+'Novembre'!C8+'Decembre'!C8"
+        },
+        {
+          "cat": "Autre",
+          "total": "='Janvier'!C9+'Fevrier'!C9+'Mars'!C9+'Avril'!C9+'Mai'!C9+'Juin'!C9+'Juillet'!C9+'Aout'!C9+'Septembre'!C9+'Octobre'!C9+'Novembre'!C9+'Decembre'!C9"
+        }
+      ],
+      "totals_row": {
+        "label": "TOTAL",
+        "formulas": {
+          "total": "=SUM(B{firstrow}:B{lastrow})"
+        }
+      }
+    },
+    {
+      "name": "Dashboard",
+      "columns": [],
+      "column_widths": [24, 160, 160, 24, 160, 160, 24],
+      "section_bars": [
+        {
+          "range": "B2:F2",
+          "label": "💰 SUIVI DE DÉPENSES — VUE ANNUELLE",
+          "fill": "#5C7A6B",
+          "text": "#FFFFFF"
+        },
+        {
+          "range": "B10:F10",
+          "label": "GRAPHIQUES",
+          "fill": "#D4876B",
+          "text": "#FFFFFF"
+        }
+      ],
+      "panels": [
+        {
+          "range": "B3:F8",
+          "fill": "#FFFFFF",
+          "border": "#E8E0D4"
+        }
+      ],
+      "kpi_cards": [
+        {
+          "anchor": "B4",
+          "label": "Revenus annuels",
+          "value": "=Revenus!B14",
+          "format": "#,##0 €",
+          "accent": "#5C7A6B"
+        },
+        {
+          "anchor": "E4",
+          "label": "Budget annuel",
+          "value": "=Resume_Mensuel!B14",
+          "format": "#,##0 €",
+          "accent": "#8B8A87"
+        },
+        {
+          "anchor": "B7",
+          "label": "Total dépensé",
+          "value": "=Resume_Mensuel!C14",
+          "format": "#,##0 €",
+          "accent": "#D4876B"
+        },
+        {
+          "anchor": "E7",
+          "label": "Épargne réelle",
+          "value": "=Revenus!B14-Resume_Mensuel!C14",
+          "format": "#,##0 €",
+          "accent": "#5C7A6B"
+        }
+      ],
+      "charts": [
+        {
+          "type": "bar",
+          "title": "Budget vs Dépensé par mois",
+          "data_range": "Resume_Mensuel!A1:C13",
+          "anchor": "B11",
+          "series_colors": ["#8B8A87", "#D4876B"]
+        },
+        {
+          "type": "pie",
+          "title": "Répartition des dépenses par catégorie",
+          "data_range": "Resume_Cat!A1:B9",
+          "anchor": "B28"
+        }
+      ]
+    }
+  ]
+}
